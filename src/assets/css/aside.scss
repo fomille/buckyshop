@@ -1,0 +1,31 @@
+.layout-aside {
+  width: 240px;
+  background-color: #ffffff;
+  height: calc(100% - 150px);
+  box-shadow: 0 1px 10px 1px rgba(115, 108, 203, .1);
+  border-right: 1px solid $borderColor;
+  left: 0;
+  top: 60px;
+  z-index: 199;
+  padding-bottom: 90px;
+  position: fixed!important;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .el-submenu {
+    &.is-opened.is-active {
+      .el-submenu__title {
+        border-bottom: 1px solid $borderColor;
+      }
+    }
+  }
+  .el-menu-item {
+    height: 36px;
+    line-height: 36px;
+    color: #909399;
+
+    &:hover {
+      color: #303133;
+    }
+  }
+}

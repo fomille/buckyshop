@@ -1,0 +1,246 @@
+{
+  "sections": [
+    {
+      "name": "Slideshow",
+      "icon": "slide_show",
+      "maximum": 6,
+      "minimum": 1,
+      "multiple": true,
+      "settings": [
+        {
+          "resourceType": "header",
+          "content": "SETTINGS",
+          "elements": [
+            {
+              "resourceType": "select",
+              "label": "Size",
+              "field": "sectionSize",
+              "default": "large",
+              "options": [
+                {
+                  "value": "small",
+                  "label": "Small"
+                },
+                {
+                  "value": "medium",
+                  "label": "Medium"
+                },
+                {
+                  "value": "large",
+                  "label": "Large"
+                }
+              ]
+            },
+            {
+              "resourceType": "select",
+              "label": "Slide changes every",
+              "field": "delay",
+              "default": 5000,
+              "options": [
+                {
+                  "value": 3000,
+                  "label": "3 seconds"
+                },
+                {
+                  "value": 5000,
+                  "label": "5 seconds"
+                },
+                {
+                  "value": 7000,
+                  "label": "7 seconds"
+                },
+                {
+                  "value": 10000,
+                  "label": "10 seconds"
+                },
+                {
+                  "value": 0,
+                  "label": "Do not rotate automatically"
+                }
+              ]
+            },
+            {
+              "resourceType": "select",
+              "label": "Animation",
+              "field": "effect",
+              "default": "fade",
+              "options": [
+                {
+                  "value": "fade",
+                  "label": "Fade-in and fade-out"
+                },
+                {
+                  "value": "slide",
+                  "label": "Horizontal slide"
+                }
+              ]
+            },
+            {
+              "resourceType": "select",
+              "label": "Text size",
+              "field": "textSize",
+              "default": "medium",
+              "options": [
+                {
+                  "value": "small",
+                  "label": "Small"
+                },
+                {
+                  "value": "medium",
+                  "label": "Medium"
+                },
+                {
+                  "value": "large",
+                  "label": "Large"
+                }
+              ]
+            },
+            {
+              "resourceType": "color-picker",
+              "label": "Overlay background color",
+              "field": "overlayColor",
+              "default": "#000"
+            },
+            {
+              "resourceType": "select",
+              "label": "Opacity",
+              "field": "overlayOpacity",
+              "default": 50,
+              "options": [
+                {
+                  "value": "0",
+                  "label": "0"
+                },
+                {
+                  "value": "10",
+                  "label": "10%"
+                },
+                {
+                  "value": "20",
+                  "label": "20%"
+                },
+                {
+                  "value": "30",
+                  "label": "30%"
+                },
+                {
+                  "value": "40",
+                  "label": "40%"
+                },
+                {
+                  "value": "50",
+                  "label": "50%"
+                },
+                {
+                  "value": "60",
+                  "label": "60%"
+                },
+                {
+                  "value": "70",
+                  "label": "70%"
+                },
+                {
+                  "value": "80",
+                  "label": "80%"
+                },
+                {
+                  "value": "90",
+                  "label": "90%"
+                }
+              ]
+            },
+            {
+              "resourceType": "select",
+              "label": "Arrow",
+              "field": "arrowStyle",
+              "default": "round",
+              "options": [
+                {
+                  "value": "round",
+                  "label": "Round"
+                },
+                {
+                  "value": "square",
+                  "label": "Square"
+                },
+                {
+                  "value": "invisible",
+                  "label": "Invisible"
+                }
+              ]
+            },
+            {
+              "resourceType": "select",
+              "label": "Navigation",
+              "field": "navStyle",
+              "default": "round",
+              "options": [
+                {
+                  "value": "round",
+                  "label": "Round"
+                },
+                {
+                  "value": "square",
+                  "label": "Square"
+                },
+                {
+                  "value": "invisible",
+                  "label": "Invisible"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "template": {
+        "resourceType": "header",
+        "content": "CONTENT",
+        "settings": [
+          {
+            "resourceType": "header",
+            "content": {
+              "titleField": "heading",
+              "imageUrlField": "imageURL"
+            },
+            "elements": [
+              {
+                "resourceType": "image-picker",
+                "label": "Image",
+                "field": "imageURL",
+                "default": ""
+              },
+              {
+                "resourceType": "text",
+                "label": "Image alt text",
+                "field": "alt",
+                "placeholder": "Please input alt text"
+              },
+              {
+                "resourceType": "text",
+                "label": "Heading text",
+                "field": "heading",
+                "maxLength": 64,
+                "default": "ENTER HEADING TEXT",
+                "placeholder": "Please input heading"
+              },
+              {
+                "resourceType": "text",
+                "label": "Subheading text",
+                "field": "subheading",
+                "default": "Enter subheading text",
+                "placeholder": "Please input subheading"
+              },
+              {
+                "resourceType": "link-picker",
+                "label": "Button link",
+                "field": "buttonLink",
+                "default": "",
+                "placeholder": "Please paste or select a url"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
