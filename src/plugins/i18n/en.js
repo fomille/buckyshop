@@ -29,14 +29,14 @@ export default {
   },
   base: {
     home: '首页',
-    confirm: '确定',
+    confirm: 'OK',
     cancel: 'Cancel',
     discard: '取消',
     save: 'Save',
-    leave: '离开',
+    leave: 'Leave',
     reset: '重置',
     actionLabel: '操作',
-    actionCopy: '拷贝',
+    actionCopy: 'Copy',
     rename: 'Rename',
     preview: 'Preview',
     publish: 'Publish',
@@ -58,6 +58,7 @@ export default {
     keyword: 'Please input keywords',
     inputPlaceholder: '请输入内容',
     selectPlaceholder: '请选择',
+    opps: 'OPPS',
     date: {
       placeholder: 'Please select a time',
       start: 'Start time',
@@ -121,6 +122,20 @@ export default {
      */
     numberOnly: {
       placeholder: '请输入大于0的数字'
+    },
+    /**
+     * 图片ALT编辑弹窗
+     */
+    imageAlt: {
+      heading: 'Edit picture ALT information',
+      subheading: 'Add a short description to the picture to improve the SEO effect',
+      entity: {
+        alt: {
+          label: 'ALT',
+          placeholder: 'Please input alt information',
+          required: ''
+        }
+      }
     }
   },
   /**
@@ -455,7 +470,29 @@ export default {
         clearAllFilter: 'Clear all filter'
       },
       update: {
-        pageTitle: '询盘详情'
+        pageTitle: 'Inquiry detail',
+        form: {
+          id: 'ID',
+          name: 'Form',
+          time: 'Date',
+          state: 'State',
+          change: 'Change state',
+          quantity: 'Inquiry quantity'
+        },
+        source: {
+          heading: 'Source of inquiry',
+          title: 'Page title',
+          url: 'Page url',
+          browser: 'Browser info'
+        },
+        dialog: {
+          title: 'Change state',
+          remark: 'Message'
+        },
+        track: {
+          heading: 'Track record',
+          message: 'Please input track message'
+        }
       }
     }
   },
@@ -473,7 +510,7 @@ export default {
       pageTitle: 'Themes',
       customize: '编辑',
       editWeb: 'Design',
-      previewWeb: 'View website',
+      previewWeb: 'Preview',
       getFreeThemes: 'Add theme',
       freeTheme: 'Free theme',
       setDefaultTheme: 'Set as default theme',
@@ -499,10 +536,10 @@ export default {
         content: 'Are you sure you want to delete this theme?'
       },
       rename: {
-        title: '重命名',
-        content: '修改此主题的名称。您的访客不会看到这部分内容。',
-        placeholder: '请输入主题名称',
-        error: '主题名称长度在32位以内'
+        title: 'Rename theme',
+        content: 'Provide a new name for this theme',
+        placeholder: 'Please input name',
+        error: 'theme name length is less than 32 bits'
       },
       duplicate: {
         title: '复制主题',
@@ -516,12 +553,111 @@ export default {
     }
   },
   /**
-   * 店铺装修
+   * BUILDER
    */
   design: {
-    home: {
-      pageTitle: 'Design website',
-      addPage: 'Add custom page'
-    }
+    pageTitle: 'Design website',
+    addPage: 'Add custom page',
+    editMenu: '编辑菜单',
+    selected: '选择',
+    clonePage: {
+      title: '整页复制',
+      tips: '复制成功，请在其它页面粘帖'
+    },
+    sectionAlias: {
+      heading: 'Section remark',
+      placeholder: 'Please input section remark'
+    },
+    meta: {
+      name: '名称',
+      version: '版本',
+      author: '作者'
+    },
+    /**
+     * 图片上传组件
+     */
+    imageBlock: {
+      button: 'Select image',
+      change: 'Change',
+      clear: 'Clear',
+      selected: 'Select',
+      heading: 'Image',
+      library: 'Library',
+      free: 'Free images'
+    },
+    addSlide: 'Add',
+    remove: 'Remove Section',
+    copy: 'Copy to current page',
+    copyItem: '复制',
+    copyToClip: 'Copy to clipboard',
+    copySucceeded: 'Copy successful',
+    clear: 'Remove Content',
+    clearTips: '该操作会移除当前模块内已添加的项目，你可以在清空之后重新添加新的项目。确认要清空吗？',
+    clearHeading: 'OPPS',
+    exit: 'Unsaved data will be lost. Do you want to leave?',
+    richText: {
+      info: '点击图片编辑内容'
+    },
+    picker: {
+      productCollection: {
+        edit: 'Edit Collection',
+        select: 'Product Collection',
+        add: 'Create Collection'
+      },
+      inquiryForm: {
+        edit: '编辑表单',
+        select: '选择表单',
+        add: '添加表单'
+      }
+    },
+    productCollectionPicker: {
+      type: 'number',
+      field: 'quantity',
+      name: {
+        en: 'MAX Quantity',
+        'zh-CN': '最多显示数量'
+      },
+      placeholder: {
+        en: 'Quantity',
+        'zh-CN': '商品显示数量'
+      }
+    },
+    articleCollectionPicker: {
+      type: 'number',
+      field: 'quantity',
+      name: {
+        en: 'MAX Quantity',
+        'zh-CN': '最多显示数量'
+      },
+      placeholder: {
+        en: 'Quantity',
+        'zh-CN': '文章显示数量'
+      }
+    },
+    inquiryFormPicker: {
+      icon: 'fo-texting',
+      type: 'inquiryForm',
+      placeholder: {
+        en: 'Inquiry form',
+        'zh-CN': '询盘表单'
+      },
+      name: {
+        en: 'Inquiry form',
+        'zh-CN': '询盘表单'
+      }
+    },
+    newSection: {
+      icon: 'fo-add',
+      type: 'addition',
+      removable: false,
+      name: {
+        en: 'Add section',
+        'zh-CN': '添加模块'
+      }
+    },
+    saveSuccess: '保存成功',
+    section: '模块',
+    settings: '主题',
+    addSection: 'Select Section'
   }
 }

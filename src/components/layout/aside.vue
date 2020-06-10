@@ -50,7 +50,7 @@ export default {
           children: [
             {
               name: '我的主题',
-              path: '/:langCode/:shopCode/store/themes'
+              path: '/:shopCode/themes'
             }
           ]
         },
@@ -60,15 +60,15 @@ export default {
           children: [
             {
               name: this.$t('enquiry.inbox.paging.pageTitle'),
-              path: '/:langCode/:shopCode/store/enquiry/inbox'
+              path: '/:shopCode/enquiry/inbox'
             },
             {
               name: this.$t('enquiry.form.paging.pageTitle'),
-              path: '/:langCode/:shopCode/store/enquiry/form'
+              path: '/:shopCode/enquiry/form'
             },
             {
               name: this.$t('enquiry.email.pageTitle'),
-              path: '/:langCode/:shopCode/store/enquiry/email'
+              path: '/:shopCode/enquiry/email'
             }
           ]
         }

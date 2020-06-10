@@ -11,14 +11,11 @@ export default {
       return JSON.parse(data)
     }
     return {
-      account: '',
+      accountCode: '',
       avatar: '',
-      id: '',
-      realName: 'Guest',
-      roles: [
-
-      ],
-      token: ''
+      firstName: '',
+      lastName: '',
+      authorization: ''
     }
   },
   login (data) {

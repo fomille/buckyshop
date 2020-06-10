@@ -3,7 +3,7 @@ import http from './http'
 /**
  * 登录
  */
-export const login = params => http.post('/platform/api/member/member/login', params)
+export const login = params => http.post('/buckydrop/portal/seller/account/login', params)
 /**
  * 检查邮件
  */

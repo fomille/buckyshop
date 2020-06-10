@@ -193,9 +193,9 @@ export default {
         current: this.dataTable.pagingOptions.pageIndex,
         size: this.dataTable.pagingOptions.pageSize,
         orderBy: this.dataTable.searchConditions.orderBy,
-        params: {
+        item: {
           title: this.dataTable.searchConditions.keyword,
-          siteId: this.shopCode
+          shopCode: this.shopCode
         }
       })
         .then(result => {
@@ -219,13 +219,13 @@ export default {
      * 添加跳转
      */
     addForm () {
-      this.$router.push(`/${this.langCode}/${this.shopCode}/store/enquiry/form/add`)
+      this.$router.push(`/${this.shopCode}/enquiry/form/add`)
     },
     /**
      * 修改跳转
      */
     updateForm (row) {
-      this.$router.push(`/${this.langCode}/${this.shopCode}/store/enquiry/form/update/${row.id}`)
+      this.$router.push(`/${this.shopCode}/enquiry/form/update/${row.id}`)
     },
     /**
      * 删除

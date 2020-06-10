@@ -10,20 +10,20 @@
             </a>
           </p>
           <el-form :model="entity" :rules="formRules" ref="ruleForm">
-            <el-form-item prop="account">
+            <el-form-item prop="accountName">
               <el-input
                 maxlength="64"
-                v-model="entity.account"
+                v-model="entity.accountName"
                 @blur="accountBlur"
                 :placeholder="$t('passport.login.entity.account.placeholder')"
                 auto-complete="off">
               </el-input>
             </el-form-item>
-            <el-form-item prop="password">
+            <el-form-item prop="accountPwd">
               <el-input
                 maxlength="30"
                 type="password"
-                v-model="entity.password"
+                v-model="entity.accountPwd"
                 :placeholder="$t('passport.login.entity.password.placeholder')"
                 auto-complete="off">
               </el-input>
@@ -58,6 +58,8 @@
 import Circle from '../../plugins/circle'
 import extend from '../../plugins/page/base'
 import * as users from '../../plugins/api/passport'
+// import Cookie from 'js-cookie'
+import * as theme from '../../plugins/api/theme'
 
 export default {
   name: 'login',
@@ -65,17 +67,16 @@ export default {
   data () {
     return {
       entity: {
-        account: '',
-        password: '',
-        agentId: '1161928350035087362',
-        platform: 1
+        accountName: '1256083602@qq.com',
+        accountPwd: '123456',
+        lang: 'en'
       },
       formRules: {
-        account: [
+        accountName: [
           { required: true, message: this.$t('passport.login.entity.account.required'), trigger: 'blur' },
           { type: 'email', message: this.$t('passport.login.entity.account.custom'), trigger: 'blur' }
         ],
-        password: [
+        accountPwd: [
           { required: true, message: this.$t('passport.login.entity.password.required'), trigger: 'blur' }
         ]
       }
@@ -85,8 +86,26 @@ export default {
     this.backgroundAnimation()
   },
   created () {
+    console.log(process.env)
   },
   methods: {
+    getShop () {
+      theme.shops({
+      })
+        .then(result => {
+          result.options = {
+            formName: 'update',
+            action: this.actionType.update
+          }
+          this.resultMessage(result, (success) => {
+            if (success) {
+            }
+          })
+        })
+        .catch(error => {
+          this.networkMistake(error)
+        })
+    },
     /**
      * 登录
      * @param formName
@@ -100,7 +119,7 @@ export default {
                 if (success) {
                   this.$store.commit('setUserModel', result.data)
                   // location.href = this.$route.query.redirect || '/'
-                  location.href = `/${this.langCode}/${this.shopCode}/store/themes`
+                  location.href = `/${this.shopCode}/themes`
                 }
               })
             })

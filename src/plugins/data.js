@@ -1,3 +1,5 @@
+import placeholderImage from '../assets/image/placeholder.jpg'
+
 export default {
   language: [
     // {
@@ -80,5 +82,6 @@ export default {
       name: '简体中文 (beta 版)',
       value: 'zh-CN'
     }
-  ]
+  ],
+  placeholderImage: placeholderImage
 }

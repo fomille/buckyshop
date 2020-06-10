@@ -255,7 +255,7 @@ export default {
     return {
       entity: {
         remark: '',
-        siteId: '',
+        shopCode: '',
         title: '',
         displayLabel: '',
         buttonLabel: 'Submit',
@@ -358,7 +358,7 @@ export default {
      * 添加数据
      */
     addForm () {
-      this.entity.siteId = this.siteId
+      this.entity.shopCode = this.shopCode
       enquiry.enquiryFormUpdate(this.entity)
         .then(result => {
           result.options = {
@@ -368,7 +368,7 @@ export default {
           this.resultMessage(result, (success) => {
             if (success) {
               this.goBack()
-              // this.$router.push(`/enquiry/${this.siteId}/form/update/${result.data.id}`)
+              // this.$router.push(`/enquiry/${this.shopCode}/form/update/${result.data.id}`)
               // this.entity.id = result.data.id
             }
           })
@@ -381,7 +381,7 @@ export default {
      * 跳转回列表
      */
     goBack () {
-      this.$router.push(`/${this.langCode}/${this.shopCode}/store/enquiry/form`)
+      this.$router.push(`/${this.shopCode}/enquiry/form`)
     },
     /**
      * 更新数据
@@ -420,7 +420,7 @@ export default {
               .then(result => {
                 result.options = {
                   action: this.actionType.delete,
-                  url: `/enquiry/${this.siteId}/form`
+                  url: `/enquiry/${this.shopCode}/form`
                 }
                 this.resultMessage(result, () => {
                   done()

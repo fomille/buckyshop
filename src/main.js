@@ -12,10 +12,17 @@ import PageLoading from './components/page/page-loading'
 import PageTable from './components/page/paging-table'
 import PageBlockBase from './components/page/page-block-base'
 import elementUI from 'element-ui'
+import http from './plugins/api/http'
+import vueLodash from 'lodash'
+import global from './plugins/data'
 
 Vue.use(elementUI)
 Vue.config.productionTip = false
 Vue.prototype.utility = utility
+Vue.prototype.axios = http
+Vue.prototype.global = global
+Vue.prototype.getLodash = vueLodash
+
 Vue.component('PageBlock', PageBlock)
 Vue.component('PageBlockBase', PageBlockBase)
 Vue.component('PageLoading', PageLoading)

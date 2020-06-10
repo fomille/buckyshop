@@ -348,8 +348,8 @@ export default {
         current: this.dataTable.tableOptions.pageIndex,
         size: this.dataTable.tableOptions.pageSize,
         orderBy,
-        params: {
-          siteId: this.shopCode,
+        item: {
+          shopCode: this.shopCode,
           states,
           q,
           device,
@@ -384,7 +384,7 @@ export default {
      * 修改跳转
      */
     updateEnquiry (row) {
-      this.$router.push(`/site/${this.siteId}/enquiry/${row.id}`)
+      this.$router.push(`/en/${this.shopCode}/enquiry/inbox/update/${row.id}`)
     }
   }
 }

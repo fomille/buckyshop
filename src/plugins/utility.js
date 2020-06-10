@@ -72,6 +72,10 @@ export default {
     }
     return format
   },
+  timestamp () {
+    const date = new Date()
+    return date.getTime()
+  },
   timestampToDate (span, format) {
     const date = new Date(span)
     return this.dateFormat(date, format || 'yyyy-MM-dd')
@@ -177,14 +181,13 @@ export default {
    * @returns {string}
    */
   getLanguage () {
-    let lang = localStorage.getItem('language')
-
-    if (!lang) {
-      lang = (navigator.language || navigator.userLanguage)
-    }
-    lang = 'en|zh-CN'.indexOf(lang) > -1 ? lang : 'en'
+    // let lang = localStorage.getItem('language')
     //
-    // const lang = 'en'
+    // if (!lang) {
+    //   lang = (navigator.language || navigator.userLanguage)
+    // }
+    // lang = 'en|zh-CN'.indexOf(lang) > -1 ? lang : 'en'
+    const lang = 'en'
     localStorage.setItem('language', lang)
     return lang
   },

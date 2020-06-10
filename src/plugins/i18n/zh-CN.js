@@ -143,5 +143,106 @@ export default {
         }
       }
     }
+  },
+  /**
+   * BUILDER
+   */
+  design: {
+    pageTitle: '网站设计',
+    addPage: '添加页面',
+    editMenu: '编辑菜单',
+    selected: '选择',
+    clonePage: {
+      title: '整页复制',
+      tips: '复制成功，请在其它页面粘帖'
+    },
+    sectionAlias: {
+      heading: '模块名称',
+      placeholder: '请输入模块名称'
+    },
+    meta: {
+      name: '名称',
+      version: '版本',
+      author: '作者'
+    },
+    imageBlock: {
+      button: '选择图片',
+      change: '更换',
+      clear: '清除',
+      selected: '选择',
+      heading: '图片'
+    },
+    remove: '删除当前模块',
+    copy: '复制到当前页',
+    copyItem: '复制',
+    copyToClip: '复制到剪贴板',
+    copySucceeded: '复制成功',
+    clear: '清空',
+    clearTips: '该操作会移除当前模块内已添加的项目，你可以在清空之后重新添加新的项目。确认要清空吗？',
+    clearHeading: '清空确认',
+    richText: {
+      info: '点击图片编辑内容'
+    },
+    picker: {
+      productCollection: {
+        edit: '编辑集合',
+        select: '选择集合',
+        add: '添加集合'
+      },
+      inquiryForm: {
+        edit: '编辑表单',
+        select: '选择表单',
+        add: '添加表单'
+      }
+    },
+    productCollectionPicker: {
+      type: 'number',
+      field: 'quantity',
+      name: {
+        en: 'MAX Quantity',
+        'zh-CN': '最多显示数量'
+      },
+      placeholder: {
+        en: 'Quantity',
+        'zh-CN': '商品显示数量'
+      }
+    },
+    articleCollectionPicker: {
+      type: 'number',
+      field: 'quantity',
+      name: {
+        en: 'MAX Quantity',
+        'zh-CN': '最多显示数量'
+      },
+      placeholder: {
+        en: 'Quantity',
+        'zh-CN': '文章显示数量'
+      }
+    },
+    inquiryFormPicker: {
+      icon: 'fo-texting',
+      type: 'inquiryForm',
+      placeholder: {
+        en: 'Inquiry form',
+        'zh-CN': '询盘表单'
+      },
+      name: {
+        en: 'Inquiry form',
+        'zh-CN': '询盘表单'
+      }
+    },
+    newSection: {
+      icon: 'fo-add',
+      type: 'addition',
+      removable: false,
+      name: {
+        en: 'Add section',
+        'zh-CN': '添加模块'
+      }
+    },
+    saveSuccess: '保存成功',
+    section: '模块',
+    settings: '主题',
+    addSection: '添加模块'
   }
 }

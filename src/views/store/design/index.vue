@@ -3,14 +3,27 @@
     :loading="pageLoading"
     :invalid="pageIsValid"
     :full-screen="true"
-    v-title="$t('design.home.pageTitle')">
+    v-title="$t('design.pageTitle')">
     <div class="design-canvas">
-      <div class="design-sidebar">
+      <div :class="`design-sidebar ${editSectionStatus}`">
         <h3 class="design-sidebar-heading text-truncate">
-          <a class="bs-exit-edit" href=""></a>
-          Today, chemical manufacturers striving to secure
+          <a
+            class="bs-exit-edit"
+            href="javascript:void(0)"
+            @click="exitDesign"
+          ></a>
+          {{shopConfig.template.title}}
         </h3>
-        <element-section></element-section>
+        <tool-bar
+          v-model="dataset"
+          :shop-config="shopConfig"
+          :snapshot="updateScreenShot"
+          @design="designModel"
+          @toolbar="changeToolbar"
+          @updateSnapshot="updateSnapshot"
+          @editing="editSection"
+        >
+        </tool-bar>
       </div>
       <div class="design-website">
         <div class="design-website-navigation">
@@ -45,7 +58,7 @@
                     command="fo-add-custom-page"
                   >
                     <i class="fo-add"></i>
-                    {{ $t('design.home.addPage')}}
+                    {{ $t('design.addPage')}}
                   </el-dropdown-item>
                 </el-dropdown-menu>
 
@@ -69,15 +82,10 @@
             </el-col>
           </el-row>
         </div>
-        <div class="design-website-container">
+        <div :class="`design-website-container ${editSectionStatus}`">
           <div class="design-website-content">
             <div class="design-website-wrapper">
-              <iframe class="design-website-iframe" :src="pageURL" id="editor"></iframe>
-            </div>
-          </div>
-          <div class="design-settings active">
-            <div style="border: 2px solid blue;height: 3000px">
-              design-settings
+              <iframe class="design-website-iframe" :src="`http://dev-preview-${shopTemplateCode}.mybuckyshop.com/index.html`" id="editor"></iframe>
             </div>
           </div>
         </div>
@@ -88,154 +96,124 @@
 
 <script>
 import extend from '../../../plugins/page/unsaved'
-import ElementSection from './components/section'
+import toolBar from './components/toolBar'
+import * as http from '../../../plugins/api/theme'
+
 export default {
   name: 'design',
   components: {
-    ElementSection
+    toolBar
   },
   extends: extend,
   data () {
     return {
       pageURL: 'https://1209760082859032577-1254724793669640193.design.fomille.com/index.html',
       pages: {
-        customPages: [
-          {
-            h1Title: '',
-            id: '1254715926109872130',
-            isCustom: true,
-            pageType: 'custom',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/pages/1254715926109872130.html',
-            seoTitle: '',
-            title: 'About us'
-          },
-          {
-            h1Title: '',
-            id: '1255092823015972866',
-            isCustom: true,
-            pageType: 'custom',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/pages/1255092823015972866.html',
-            seoTitle: '',
-            title: 'dddddd'
-          }
-        ],
-        systemPages: [
-          {
-            h1Title: '',
-            id: '1209760091058896897',
-            isCustom: false,
-            pageType: 'home',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/index.html',
-            seoTitle: '',
-            title: '首页'
-          },
-          {
-            h1Title: '',
-            id: '1209760091058896906',
-            isCustom: false,
-            pageType: 'articleDetail',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/articles/detail/builder-example-article.html',
-            seoTitle: '',
-            title: '文章详情'
-          },
-          {
-            h1Title: '',
-            id: '1209760091058896909',
-            isCustom: false,
-            pageType: 'article',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/articles/index.html',
-            seoTitle: '',
-            title: '文章列表'
-          },
-          {
-            h1Title: '',
-            id: '1209760091063091202',
-            isCustom: false,
-            pageType: 'articleCollection',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/articles/collections/index.html',
-            seoTitle: '',
-            title: '文章集合'
-          },
-          {
-            h1Title: '',
-            id: '1209760091063091205',
-            isCustom: false,
-            pageType: 'productDetail',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/products/detail/builder-example-product.html',
-            seoTitle: '',
-            title: '商品详情'
-          },
-          {
-            h1Title: '',
-            id: '1209760091063091210',
-            isCustom: false,
-            pageType: 'product',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/products/index.html',
-            seoTitle: '',
-            title: '商品列表'
-          },
-          {
-            h1Title: '',
-            id: '1209760091063091213',
-            isCustom: false,
-            pageType: 'productCollection',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/products/collections/index.html',
-            seoTitle: '',
-            title: '商品集合'
-          },
-          {
-            h1Title: '',
-            id: '1209760091063091216',
-            isCustom: false,
-            pageType: 'search',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/search.html',
-            seoTitle: '',
-            title: '搜索'
-          },
-          {
-            h1Title: '',
-            id: '1209760091063091218',
-            isCustom: false,
-            pageType: 'thanks',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/thanks.html',
-            seoTitle: '',
-            title: '感谢页'
-          },
-          {
-            h1Title: '',
-            id: '1209760091063091220',
-            isCustom: false,
-            pageType: 'pageNotFound',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/404.html',
-            seoTitle: '',
-            title: '404'
-          },
-          {
-            h1Title: '',
-            id: '1209760091063091222',
-            isCustom: false,
-            pageType: 'outOfService',
-            previewUrl: 'https://1209760082859032577-1254724793669640193.design.fomille.com/out-of-service.html',
-            seoTitle: '',
-            title: '网站停用'
-          }
-        ]
+        customPages: [],
+        systemPages: []
       },
+      dataset: {
+        common: {
+          footer: {
+            data: {}
+          },
+          header: {
+            data: {}
+          }
+        },
+        config: {},
+        page: {},
+        shopCode: '',
+        templateCode: ''
+      },
+      /**
+       * 店铺配置 & Sections & Schema
+       */
+      shopConfig: {
+        /**
+         * 模版信息
+         */
+        template: {},
+        /**
+         * 通用组件（header & footer & floatMenu)
+         */
+        common: {},
+        /**
+         * Sections
+         */
+        section: {},
+        /**
+         * 系统配置
+         */
+        config: {
+          /**
+           * 字体等schema
+           */
+          schema: {
+            Social: {},
+            Colors: {},
+            Checkout: {},
+            Favicon: {},
+            Typography: {},
+            Cart: {}
+          },
+          /**
+           * 主题配置
+           */
+          data: {
+            /**
+             * 主题配置
+             */
+            current: {
+              Social: {},
+              Colors: {},
+              Checkout: {},
+              Favicon: {},
+              Typography: {},
+              Cart: {}
+            },
+            /**
+             * 模版信息
+             */
+            meta: {
+            },
+            /**
+             * 模版图片
+             */
+            extras: {}
+          }
+        }
+      },
+      unionPages: [],
       pageDesignStatus: false,
       /**
        * 是否更新首页截屏
        */
       updateScreenShot: false,
       pageData: {
-        title: 'Product Pages'
-      }
+        title: 'Product Pages',
+        previewUrl: ''
+      },
+      editSectionStatus: ''
     }
   },
   created () {
     this.pageValid()
     this.unsaved = true
+    this.getData()
   },
   methods: {
+    /**
+     * 退出编回
+     */
+    exitDesign () {
+      this.$confirm(this.$t('design.exit'), this.$t('base.opps'), {
+        confirmButtonText: this.$t('base.leave'),
+        cancelButtonText: this.$t('base.cancel')
+      }).then(() => {
+        this.$router.push(`/${this.shopCode}/themes`)
+      })
+    },
     /**
      * 设置编辑区域尺寸
      * @param value
@@ -258,13 +236,122 @@ export default {
       el.className = 'design-website-wrapper ' + value
     },
     /**
+     * 初始数据
+     */
+    getData () {
+      this.loading = true
+      this.axios.all([
+        http.pages({
+          shopCode: this.shopCode,
+          templateCode: this.shopTemplateCode
+        }),
+        http.shopConfig({
+          shopCode: this.shopCode,
+          templateCode: this.shopTemplateCode
+        })
+      ])
+        .then(this.axios.spread((result, config) => {
+          this.pageValid()
+          this.resultMessage(result, (success) => {
+            if (success) {
+              this.getPages(result.data)
+              this.shopConfig = config.data
+              this.dataset.config = config.data.config
+              this.dataset.common = config.data.common
+            }
+          })
+        }))
+        .catch(error => {
+          this.pageInvalid(error)
+        })
+    },
+    /**
+     * 获取页面
+     */
+    getPages (data) {
+      this.unionPages = this.unionPages.concat(data.systemPages, data.customPages)
+      this.pages = data
+      if (data.systemPages && data.systemPages.length > 0) {
+        this.pageData = data.systemPages[0]
+        this.pageURL = this.pageData.previewUrl
+        this.getPageData(data.systemPages[0].pageCode)
+      }
+    },
+    /**
+     * 获取编辑页面的数据
+     * @param pageCode
+     */
+    getPageData (pageCode) {
+      if (pageCode && !this.utility.isEmpty(pageCode)) {
+        http.pageDetail({
+          shopCode: this.shopCode,
+          templateCode: this.shopTemplateCode,
+          pageCode: pageCode
+        }).then(result => {
+          this.resultMessage(result, (success) => {
+            if (success) {
+              result.data.modules.forEach((o) => {
+                o.settings = o.settings || {}
+                try {
+                  if (!o.settings.sectionAlias) {
+                    o.settings.sectionAlias = ''
+                  }
+                } catch (e) {
+                  console.log(e, o)
+                }
+              })
+              this.dataset.page = result.data
+              this.dataset.shopCode = this.shopCode
+              this.dataset.templateCode = this.shopTemplateCode
+              this.$nextTick(() => {
+                this.unsaved = false
+              })
+            }
+          })
+        })
+          .catch(error => {
+            this.networkMistake(error)
+          })
+      }
+    },
+    /**
+     * 跟据浏览器URL切换页面和配置
+     * @param data
+     */
+    designModel (data) {
+      // if (!(data.pageType === this.pageData.pageType && data.pageId === this.pageData.id)) {
+      //   this.pageDesignStatus = true
+      //   this.changePage(data.pageId)
+      // }
+    },
+    /**
+     * 工具条位置
+     * @param value
+     */
+    changeToolbar (value) {
+      this.toolbarPosition = value
+    },
+    /**
+     * 首页截屏
+     */
+    updateSnapshot () {
+      this.updateScreenShot = false
+    },
+    /**
+     * 编辑面板
+     * @param status 是否编辑
+     */
+    editSection (status) {
+      this.editSectionStatus = status ? 'edited' : ''
+    },
+    /**
      * 切换页面
      * @param id
      */
     changePage (id) {
       // if (id === 'fo-add-custom-page') {
       //   let o = window.open('', '_blank', '')
-      //   o.location.href = `/site/${this.siteId}/pages`
+      //   o.location.href = `/site/${this.shopCode}/pages`
       // } else {
       //   let pages = this.unionPages.filter((o) => {
       //     return o.id === id
@@ -285,13 +372,13 @@ export default {
     saveChanges () {
       // this.dataset.templateId = this.themeId
       // this.datasource.builderConfigSave({
-      //   siteId: this.dataset.siteId,
+      //   shopCode: this.dataset.shopCode,
       //   templateId: this.dataset.templateId,
       //   current: this.dataset.current,
       //   layout: this.dataset.layout,
       //   page: {
       //     id: this.dataset.page.id,
-      //     siteId: this.dataset.page.siteId,
+      //     shopCode: this.dataset.page.shopCode,
       //     moduleList: this.dataset.page.moduleList
       //   }
       // })

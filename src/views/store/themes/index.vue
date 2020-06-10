@@ -18,23 +18,15 @@
           <p class="clearfix">
             {{ utility.timestampToDatetime(entity.updateTime) }}
           </p>
-          <p class="text-secondary">
-            <label>
-              ID
-            </label>
-            <label class="ml-2">
-              {{ siteId }}
-            </label>
-          </p>
           <div class="publish-tips mt-5">
-<!--            <a class="el-button absolutely el-button&#45;&#45;primary" :href="`/design/${siteId}/${entity.id}`" target="_blank">-->
-<!--              {{ $t("store.theme.editWeb") }}-->
-<!--            </a>-->
+            <a class="el-button absolutely el-button--primary" :href="`/${shopCode}/canvas/${entity.shopTemplateCode}`" target="_blank">
+              {{ $t("store.theme.editWeb") }}
+            </a>
           </div>
           <div class="publish-tips mt-5">
-<!--            <a class="el-button absolutely el-button&#45;&#45;default" :href="`https://${siteModel.domain}`" target="_blank">-->
-<!--              {{ $t("store.theme.previewWeb") }}-->
-<!--            </a>-->
+            <a class="el-button absolutely el-button--default" :href="`https://${entity.domain}`" target="_blank">
+              {{ $t("store.theme.previewWeb") }}
+            </a>
           </div>
           <!--          <div-->
           <!--            class="mt-7">-->
@@ -80,13 +72,13 @@
       :heading="$t('store.theme.owned.heading')"
       :subheading="$t('store.theme.owned.subheading')"
     >
-      <template slot="header" v-if="themes.length < 5">
+      <template slot="header" v-if="dataset.length < 5">
         <el-button @click="exploreVisible = true" size="small" class="float-right mt-5">
           {{ $t("store.theme.getFreeThemes") }}
         </el-button>
       </template>
       <el-table
-        :data="themes"
+        :data="dataset"
         v-loading="tableLoading"
         style="width: 100%">
         <el-table-column
@@ -113,7 +105,7 @@
         </el-table-column>
         <el-table-column label="" width="100">
           <template slot-scope="scope">
-            <router-link class="text-primary" :to="`/${langCode}/${shopCode}/store/${scope.row.id}/design`">
+            <router-link class="text-primary" :to="`/${shopCode}/canvas/${scope.row.shopTemplateCode}`">
               {{ $t("store.theme.editWeb") }}
             </router-link>
           </template>
@@ -127,10 +119,10 @@
                 </span>
               <el-dropdown-menu slot="dropdown">
                 <!--                <el-dropdown-item :command="{ data: scope.row, op: 'preview' }">{{ $t("base.preview") }}</el-dropdown-item>-->
-                <el-dropdown-item v-if="!scope.row.active" :command="{ data: scope.row, op: 'publish' }">{{ $t("store.theme.setDefaultTheme") }}</el-dropdown-item>
+                <el-dropdown-item v-if="scope.row.current === 0" :command="{ data: scope.row, op: 'publish' }">{{ $t("store.theme.setDefaultTheme") }}</el-dropdown-item>
                 <el-dropdown-item :command="{ data: scope.row, op: 'rename' }">{{ $t("base.rename") }}</el-dropdown-item>
                 <!--                <el-dropdown-item :command="{ data: scope.row, op: 'duplicate' }">{{ $t("base.duplicate") }}</el-dropdown-item>-->
-                <el-dropdown-item v-if="!scope.row.active" :command="{ data: scope.row, op: 'delete' }" divided>{{ $t("base.delete.button") }}</el-dropdown-item>
+                <el-dropdown-item v-if="scope.row.current === 0" :command="{ data: scope.row, op: 'delete' }" divided>{{ $t("base.delete.button") }}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -158,16 +150,17 @@
         <el-button size="small" :loading="loading" type="primary" @click="publishSite(false)">{{ this.$t('base.publish') }}</el-button>
       </div>
     </el-dialog>
-<!--    <explore-themes-->
+<!--    <explore-dataset-->
 <!--      @closeExplore="closeExplore"-->
 <!--      :display="exploreVisible"-->
-<!--    ></explore-themes>-->
+<!--    ></explore-dataset>-->
   </page-loading>
 </template>
 
 <script>
 import extend from '../../../plugins/page/base'
-// import ExploreThemes from '../../../components/explore-themes'
+// import ExploreThemes from '../../../components/explore-dataset'
+import * as theme from '../../../plugins/api/theme'
 
 export default {
   name: 'siteTheme',
@@ -186,15 +179,39 @@ export default {
   data () {
     return {
       entity: {},
-      themes: [],
+      dataset: [],
       updateModel: {},
       updateVisible: false,
       exploreVisible: false,
       tableLoading: false,
-      siteId: ''
+      shopCode: '',
+      imageEntity: {
+        url: '',
+        alt: ''
+      }
     }
   },
   methods: {
+    updateAlt (value) {
+      console.log('updateAlt', value)
+    },
+    getShop () {
+      theme.shops({
+      })
+        .then(result => {
+          result.options = {
+            formName: 'update',
+            action: this.actionType.update
+          }
+          this.resultMessage(result, (success) => {
+            if (success) {
+            }
+          })
+        })
+        .catch(error => {
+          this.networkMistake(error)
+        })
+    },
     /**
        * 表格下拉菜单事件
        */
@@ -309,9 +326,9 @@ export default {
        */
     publishTheme (id, isDefault) {
       this.loading = true
-      this.datasource.templatePublish({
-        id: id,
-        siteId: this.siteId
+      theme.templateUpdate({
+        shopTemplateCode: this.shopTemplateCode,
+        shopCode: this.shopCode
       })
         .then(result => {
           this.updateVisible = false
@@ -346,8 +363,10 @@ export default {
         inputPlaceholder: this.$t('store.theme.rename.placeholder'),
         inputErrorMessage: this.$t('store.theme.rename.error')
       }).then(({ value }) => {
-        this.datasource.siteTemplateRename({
-          id: data.id,
+        theme.templateUpdate({
+          shopCode: data.shopCode,
+          shopTemplateCode: data.shopTemplateCode,
+          current: data.current,
           title: value
         })
           .then(result => {
@@ -357,8 +376,8 @@ export default {
             }
             this.resultMessage(result, success => {
               if (success) {
-                this.getSiteThemes()
-                if (data.active) {
+                this.getData()
+                if (data.current === 1) {
                   this.entity.title = value
                 }
               }
@@ -375,8 +394,8 @@ export default {
     closeExplore (data, func) {
       if (data) {
         this.datasource.templateApply({
-          siteId: this.siteId,
-          templateId: data.id
+          shopCode: this.shopCode,
+          templateCode: data.id
         })
           .then(result => {
             this.exploreStatus(func)
@@ -419,138 +438,39 @@ export default {
       }
     },
     /**
-       * 获取站点所有主题
+       * 数据请求
        */
-    getSiteThemes () {
-      this.tableLoading = true
-      this.datasource.siteThemeList({
-        siteId: this.siteId
+    getData () {
+      theme.shopTemplate({
+        shopCode: this.shopCode
       })
         .then(result => {
-          this.themes = result.data
-          this.tableLoading = false
+          this.resultMessage(result, (success) => {
+            if (success) {
+              this.dataset = result.data
+              result.data.forEach((o) => {
+                if (o.current === 1) {
+                  this.entity = o
+                }
+              })
+            }
+          })
         })
         .catch(error => {
           this.networkMistake(error)
         })
     },
     /**
-       * 数据请求
-       */
-    getData () {
-      this.axios.all([
-        this.datasource.siteThemeCurrent({
-          siteId: this.siteId
-        }),
-        this.datasource.siteThemeList({
-          siteId: this.siteId
-        })
-      ])
-        .then(this.axios.spread((result, result1) => {
-          this.pageValid()
-          if (result.success) {
-            this.getCurrentTheme(result)
-            this.themes = result1.data
-          } else {
-            // this.errorMessage(result)
-          }
-        }))
-        .catch(error => {
-          this.pageInvalid(error)
-        })
-    },
-    /**
        * 预览网站
        */
     previewSite (data) {
-      this.utility.openSite(`http://${this.siteId}-${data.id}.design.fomille.com/`)
+      this.utility.openSite(`http://${this.shopCode}-${data.id}.design.fomille.com/`)
     }
   },
   created () {
-    // this.getData()
-    this.entity = this.updateModel = {
-      active: true,
-      author: 'devin',
-      changed: true,
-      createTime: 1587984677127,
-      description: 'Regular',
-      id: '1254724793669640193',
-      image: 'https://site-file.fomillesite.com/000000/1254740324405596162.jpg',
-      longImage: 'https://site-file.fomillesite.com/000000/1254742240534872065.jpg',
-      mobileImage: '',
-      myTitle: '',
-      pcImage: '',
-      screenShot: 'https://site-file.fomillesite.com/1209760082859032577/annex/1254751058413867010.png',
-      siteId: '1209760082859032577',
-      templateId: '100005',
-      title: 'Regular',
-      updateTime: 1587990938260,
-      version: 'v1.0.0',
-      shopUrl: 'https://ddddddd.fomillesite.com'
-    }
-    this.themes = [
-      {
-        active: false,
-        author: '',
-        changed: true,
-        createTime: 1573711688132,
-        description: 'Nothingness template',
-        id: '1209760083001638914',
-        image: 'https://site-file.fomillesite.com/000000/1239779685173514241.jpg',
-        longImage: 'https://site-file.fomillesite.com/000000/1239779838882746369.jpg',
-        mobileImage: '',
-        myTitle: '',
-        pcImage: '',
-        screenShot: '',
-        siteId: '1209760082859032577',
-        templateId: '100002',
-        title: 'Nothingness',
-        styleName: 'Nothingness',
-        updateTime: 1588072473844,
-        version: ''
-      },
-      {
-        active: false,
-        author: '',
-        changed: false,
-        createTime: 1577788525635,
-        description: '起航-第一套独立站模板',
-        id: '1211959034677276673',
-        image: 'https://site-file.fomillesite.com/0/001/img/001.jpg',
-        longImage: 'https://site-file.fomillesite.com/0/001/img/001.long.jpg',
-        mobileImage: '',
-        myTitle: '',
-        pcImage: '',
-        screenShot: '',
-        siteId: '1209760082859032577',
-        templateId: '100000',
-        title: 'Bauhinia',
-        styleName: 'Nothingness',
-        updateTime: 1583429776688,
-        version: ''
-      },
-      {
-        active: true,
-        author: '',
-        changed: true,
-        createTime: 1587984677127,
-        description: 'Regular',
-        id: '1254724793669640193',
-        image: 'https://site-file.fomillesite.com/000000/1254740324405596162.jpg',
-        longImage: 'https://site-file.fomillesite.com/000000/1254742240534872065.jpg',
-        mobileImage: '',
-        myTitle: '',
-        pcImage: '',
-        screenShot: '',
-        siteId: '1209760082859032577',
-        templateId: '100005',
-        title: 'Regular',
-        styleName: 'Nothingness',
-        updateTime: 1587990938260,
-        version: ''
-      }
-    ]
+    this.getData()
     this.pageValid()
+    // this.getShop()
   }
 }
 </script>

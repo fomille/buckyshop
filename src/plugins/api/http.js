@@ -7,20 +7,22 @@ import { Message } from 'element-ui'
 
 http.defaults.headers.post['Content-Type'] = 'application/json'
 http.defaults.timeout = 1000 * 60
-http.defaults.baseURL = 'https://api.fomille.com'
+http.defaults.withCredentials = true
+// http.defaults.baseURL = 'http://202.105.98.154:6030'
+http.defaults.baseURL = '/api2'
+// http.defaults.baseURL = 'https://new-dev.buckydrop.com/api'
 /**
  * 请求拦截器
  */
 http.interceptors.request.use(
-  function (config) {
-    config.headers.token = passport.token()
-    config.headers.app = 'fomille'
-    config.headers.version = '0.1.0'
+  config => {
     config.headers.timestamp = new Date().getTime()
-    config.headers.sign = ''
+    config.headers.shopCode = localStorage.getItem('shopCode') || ''
+
+    // config.headers['Access-Control-Allow-Credentials'] = true
     return config
   },
-  function (error) {
+  error => {
     return Promise.reject(error)
   }
 )
@@ -29,11 +31,11 @@ http.interceptors.request.use(
  * 响应拦截器
  */
 http.interceptors.response.use(
-  function (response) {
-    if (response.data.code === 13010000) {
+  response => {
+    if (response.data.code === -1) {
       passport.logout()
       router.replace({
-        path: 'passport',
+        path: '/en/passport',
         query: {
           redirect: router.currentRoute.fullPath
         }
@@ -41,7 +43,7 @@ http.interceptors.response.use(
     }
     return response.data
   },
-  function (error) {
+  error => {
     Message({
       type: 'error',
       message: i18n.t('errorCode.networkError')

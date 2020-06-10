@@ -9,12 +9,12 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/en/passport',
+    redirect: '/passport',
     name: 'Home',
     component: Home
   },
   {
-    path: '/:langCode/passport',
+    path: '/passport',
     component: layout,
     meta: {
       title: i18n.t('passport.login.title'),
@@ -37,7 +37,7 @@ const routes = [
     ]
   },
   {
-    path: '/:langCode/settings',
+    path: '/settings',
     component: layout,
     children: [
       {
@@ -54,7 +54,7 @@ const routes = [
     ]
   },
   {
-    path: '/:langCode/:shopCode/store',
+    path: '/:shopCode',
     component: layout,
     meta: {
       title: i18n.t('passport.login.title'),
@@ -64,7 +64,7 @@ const routes = [
     },
     children: [
       {
-        path: ':themeId/design',
+        path: 'canvas/:templateCode',
         name: 'design',
         meta: {
           title: i18n.t('passport.login.title'),
@@ -139,6 +139,17 @@ const routes = [
           fullScreen: false
         },
         component: () => import('../views/store/enquiry/inbox/index')
+      },
+      {
+        path: 'enquiry/inbox/update/:id',
+        name: 'enquiry-inbox-update',
+        meta: {
+          title: i18n.t('passport.login.title'),
+          requireAuth: false,
+          hideCrumb: false,
+          fullScreen: false
+        },
+        component: () => import('../views/store/enquiry/inbox/update')
       }
     ]
   },
@@ -151,7 +162,19 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
+  base: process.env.VUE_APP_ROUTER_BASE,
+  // base: process.env.NODE_ENV === 'production' ? '/en/design/' : '/',
   routes
+})
+
+router.onError((error) => {
+  console.log('router error', error)
+  const pattern = /Loading chunk (\d)+ failed/g
+  const isChunkLoadFailed = error.message.match(pattern)
+  const targetPath = router.history.pending.fullPath
+  if (isChunkLoadFailed) {
+    router.replace(targetPath)
+  }
 })
 
 export default router

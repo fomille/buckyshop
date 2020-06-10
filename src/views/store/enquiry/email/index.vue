@@ -191,7 +191,7 @@ export default {
      */
     getData () {
       enquiry.enquiryEmail({
-        siteId: this.shopCode
+        shopCode: this.shopCode
       })
         .then(result => {
           this.pageValid()
@@ -215,7 +215,7 @@ export default {
     updateReceiver () {
       enquiry.enquiryEmailUpdate({
         emailList: this.entity.data,
-        siteId: this.shopCode
+        shopCode: this.shopCode
       })
         .then(result => {
           result.options = {

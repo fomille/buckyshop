@@ -1,6 +1,8 @@
 /**
  * 页面基类
  */
+import passport from '../passport'
+
 export default {
   data () {
     return {
@@ -27,13 +29,14 @@ export default {
         update: 99
       },
       /**
-       * 店铺 ID
+       * 店铺code
        */
-      shopCode: '1209760082859032577',
+      shopCode: 'e51f946c0916fa97f621984e0c91ac78',
       /**
        * 多语言代码
        */
-      langCode: 'en'
+      langCode: 'en',
+      shopTemplateCode: ''
     }
   },
   computed: {
@@ -43,6 +46,13 @@ export default {
      */
     language () {
       return this.utility.getLanguage()
+    },
+    /**
+     * 用户代码
+     */
+    accountCode () {
+      const user = passport.getUser()
+      return user.accountCode
     }
   },
   methods: {
@@ -185,8 +195,10 @@ export default {
   },
   created () {
     this.id = this.$route.params.id
+    this.shopTemplateCode = this.$route.params.templateCode
     if (this.$route.params.shopCode) {
       this.shopCode = this.$route.params.shopCode
+      localStorage.setItem('shopCode', this.shopCode)
     }
     this.langCode = this.$route.params.langCode || 'en'
     this.utility.setLanguage(this.langCode)

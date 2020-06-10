@@ -13,7 +13,8 @@
       <el-submenu index="9" class="avatar">
         <template slot="title">
           <span class="avatar-circle">{{ userModel.initial }}</span>
-          {{ userModel.nickName }}
+          {{ userModel.firstName }}
+          {{ userModel.lastName }}
         </template>
         <el-menu-item>
           <a  href="/support" target="_blank">
@@ -37,7 +38,7 @@
       <a href="https://www.buckydrop.com/en/admin">
         BuckyDrop
       </a>
-      <a class="active">
+      <a href="https://www.buckydrop.com/en/shop" class="active">
         BuckyShop
       </a>
     </div>
@@ -78,7 +79,7 @@ export default {
   computed: {
     userModel () {
       const userModel = this.$store.state.userModel
-      userModel.initial = userModel.nickName ? userModel.nickName.substring(0, 1).toLocaleUpperCase() : ''
+      userModel.initial = userModel.lastName ? userModel.lastName.substring(0, 1).toLocaleUpperCase() : ''
       return userModel
     }
   },

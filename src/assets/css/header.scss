@@ -13,6 +13,10 @@ header {
       display: none;
     }
 
+    .el-submenu__title {
+      color: #ffffff !important;
+    }
+
     .avatar-circle {
       display: inline-block;
       width: 30px;
@@ -20,9 +24,10 @@ header {
       border-radius: 100%;
       text-align: center;
       line-height: 30px;
-      color: #fff;
-      background-color: $themeColor;
+      color: rgb(245, 106, 0);
+      background-color: rgb(253, 227, 207);
     }
+    border: 0!important;
   }
 
   .el-menu--horizontal {

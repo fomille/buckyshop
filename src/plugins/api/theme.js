@@ -1,4 +1,13 @@
 import http from './http'
+/**
+ * 页面
+ */
+export const pages = params => http.post('/buckyshop/template/shop-page/new-all', params)
+
+/**
+ * 店铺列表
+ */
+export const shops = params => http.post('/buckydrop/portal/external-shop/customer-shop/list-bs', params)
 
 /**
  * 预览
@@ -6,71 +15,30 @@ import http from './http'
 export const preview = params => http.post('/site/api/preview', params)
 
 /**
- * 主题分页
+ * 店铺主题
  */
-export const templatePaging = params => http.post('/admin/api/tmpl/template/paging', params)
-
-/**
- * 主题详情
- */
-export const templateDetail = params => http.post('/admin/api/tmpl/template/detail', params)
+export const shopTemplate = params => http.post('/buckyshop/template/shop-template/list', params)
 
 /**
  * 主题更新
  */
-export const templateUpdate = params => http.post('/admin/api/tmpl/template/save', params)
+export const templateUpdate = params => http.post('/buckyshop/template/shop-template/update', params)
+/**
+ * 页面信息 & Section
+ */
+export const pageDetail = params => http.post('/buckyshop/template/shop-page/new-detail', params)
 
 /**
- * 模板模块列表详情
+ * 店铺配置
  */
-export const templateModuleDetail = params => http.post('/admin/api/tmpl/template-module/detail', params)
+export const shopConfig = params => http.post('/buckyshop/template/shop-template-resource/new-config-section', params)
 
 /**
- * 添加 & 修改模板模块列表
+ * 商品集合
  */
-export const templateModuleUpdate = params => http.post('/admin/api/tmpl/template-module/save', params)
+export const goodsCollection = params => http.post('/buckyshop/goods/collection/page-list', params)
 
 /**
- * 模板模块列表分页数据
+ * 预览
  */
-export const templateModulePaging = params => http.post('/admin/api/tmpl/template-module/paging', params)
-
-/**
- * 删除模板模块列表
- */
-export const templateModuleDelete = params => http.post('/admin/api/tmpl/template-module/delete', params)
-
-/**
- * 模板页面详情
- */
-export const pageDetail = params => http.post('/admin/api/tmpl/page/detail', params)
-
-/**
- * 添加 & 修改模板页面
- */
-export const pageUpdate = params => http.post('/admin/api/tmpl/page/save', params)
-
-/**
- * 模板页面分页数据
- */
-export const pagePaging = params => http.post('/admin/api/tmpl/page/paging', params)
-
-/**
- * 删除模板页面
- */
-export const pageDelete = params => http.post('/admin/api/tmpl/page/delete', params)
-
-/**
- * 页面组件
- */
-export const pageModulePaging = params => http.post('/admin/api/tmpl/page-module/paging', params)
-
-/**
- * 页面组件保存
- */
-export const pageModuleUpdate = params => http.post('/admin/api/tmpl/page-module/save-batch', params)
-
-/**
- * 组件推送
- */
-export const syncModule = params => http.post('/admin/api/tmpl/template-module/sync', params)
+export const resourcePreview = params => http.post('/buckyshop/site/resource/preview', params)

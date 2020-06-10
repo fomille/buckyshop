@@ -2,16 +2,17 @@
   <page-loading
     :page-loading="pageLoading"
     :page-is-valid="pageIsValid"
-    v-title="$t('site.enquiry.update.pageTitle')"
+    v-title="$t('enquiry.inbox.update.pageTitle')"
   >
     <div class="enquiry-page">
-      <p class="go-back">
-        <router-link :to="`/site/${siteId}/enquiry`">
-          {{ $t("site.enquiry.paging.pageTitle") }}
-        </router-link>
+      <p
+        @click="goBack"
+        class="go-back">
+        <i class="el-icon-arrow-left"></i>
+        {{ $t("enquiry.inbox.paging.pageTitle") }}
       </p>
       <h3 class="page-title">
-        {{ $t("site.enquiry.update.pageTitle") }}
+        {{ $t("enquiry.inbox.update.pageTitle") }}
       </h3>
       <el-row :gutter="20">
         <el-col :span="17">
@@ -36,13 +37,13 @@
           </page-block>
 
           <page-block
-            heading="询盘来源"
+            :heading="$t('enquiry.inbox.update.source.heading')"
             class="enquiry-content"
           >
             <el-row :gutter="20">
               <el-col :span="6">
                 <div class="enquiry-page-label">
-                  页面标题
+                  {{$t('enquiry.inbox.update.source.title')}}
                 </div>
               </el-col>
               <el-col :span="18">
@@ -55,7 +56,7 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <div class="enquiry-page-label">
-                  页面地址
+                  {{$t('enquiry.inbox.update.source.url')}}
                 </div>
               </el-col>
               <el-col :span="18" class="enquiry-page-value">
@@ -68,7 +69,7 @@
               :gutter="20">
               <el-col :span="6">
                 <div class="enquiry-page-label">
-                  浏览器信息
+                  {{$t('enquiry.inbox.update.source.browser')}}
                 </div>
               </el-col>
               <el-col :span="18" class="enquiry-page-value">
@@ -78,7 +79,7 @@
           </page-block>
 
           <page-block
-            heading="跟踪记录"
+            :heading="$t('enquiry.inbox.update.track.heading')"
             class="enquiry-record">
             <div>
               <el-input
@@ -86,17 +87,19 @@
                 :autosize="{ minRows: 3, maxRows: 5 }"
                 maxlength="255"
                 show-word-limit
-                :placeholder="$t('base.inputPlaceholder')"
+                :placeholder="$t('enquiry.inbox.update.track.message')"
                 v-model="enquiryStateModel.remark"
               ></el-input>
               <div class="text-right">
                 <el-button
                   class="mt-4"
                   type="primary"
+                  size="small"
                   @click="handleConfirm"
                   :disabled="utility.isEmpty(enquiryStateModel.remark)"
-                  >添加</el-button
-                >
+                  >
+                  {{$t('base.save')}}
+                </el-button>
               </div>
             </div>
             <div class="mt-6">
@@ -113,7 +116,7 @@
                       <div class="label">{{ timeline.operator }}</div>
                       <div class="timestamp">
                         {{
-                          moment(timeline.createTime).format("YYYY/MM/DD HH:mm")
+                        utility.timestampToDatetime(timeline.createTime)
                         }}
                       </div>
                     </el-row>
@@ -151,7 +154,7 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <div class="enquiry-page-label">
-                  编号
+                  {{ $t("enquiry.inbox.update.form.id") }}
                 </div>
               </el-col>
               <el-col :span="18">
@@ -163,7 +166,7 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <div class="enquiry-page-label">
-                  表单
+                  {{ $t("enquiry.inbox.update.form.name") }}
                 </div>
               </el-col>
               <el-col :span="18">
@@ -191,13 +194,13 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <div class="enquiry-page-label">
-                  时间
+                  {{ $t("enquiry.inbox.update.form.time") }}
                 </div>
               </el-col>
               <el-col :span="18">
                 <div class="enquiry-page-value text-right">
                   {{
-                    moment(enquiryDetail.createTime).format("YYYY/MM/DD HH:mm")
+                  utility.timestampToDatetime(enquiryDetail.createTime)
                   }}
                 </div>
               </el-col>
@@ -205,7 +208,7 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <div class="enquiry-page-label">
-                  状态
+                  {{ $t("enquiry.inbox.update.form.state") }}
                 </div>
               </el-col>
               <el-col :span="18">
@@ -213,14 +216,14 @@
                   <el-tag
                     :type="
                       this.utility.getDicType(
-                        this.Global.enquiryState,
+                        this.enquiryState,
                         enquiryDetail.state,
                         'type'
                       )
                     "
                     >{{
                       utility.getDicType(
-                        Global.enquiryState,
+                        enquiryState,
                         enquiryDetail.state
                       )
                     }}</el-tag
@@ -232,7 +235,9 @@
               class="mt-5 mb-6 btn-block"
               type="primary"
               @click="dialogVisible = true"
-              >变更状态</el-button
+              >
+              {{ $t("enquiry.inbox.update.form.change") }}
+            </el-button
             >
           </page-block>
           <page-block>
@@ -257,49 +262,55 @@
               <router-link class="mt-3" :to="customerLink">{{
                 enquiryDetail.client.phone
               }}</router-link>
-              <div class="mt-3">询盘与提交数量</div>
+              <div class="mt-3">
+                {{ $t("enquiry.inbox.update.form.quantity") }}
+              </div>
               <div class="count mt-3">{{ enquiryDetail.client.enquires }}</div>
             </div>
           </page-block>
         </el-col>
       </el-row>
-      <el-dialog title="变更状态" :visible.sync="dialogVisible" :close-on-click-modal="false" width="550px">
+      <el-dialog :title="$t('enquiry.inbox.update.dialog.title')" :visible.sync="dialogVisible" :close-on-click-modal="false" width="550px">
         <el-form
           :model="enquiryStateModel"
           ref="stateChangeForm"
           label-position="top"
         >
-          <el-form-item label="状态">
+          <el-form-item :label="$t('enquiry.inbox.update.form.state')">
             <el-select
               v-model="enquiryStateModel.state"
               :placeholder="$t('base.selectPlaceholder')"
             >
               <el-option
-                v-for="{ label, value } in Global.enquiryState"
+                v-for="{ label, value } in enquiryState"
                 :key="value"
                 :label="label"
                 :value="value"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="备注记录">
+          <el-form-item :label="$t('enquiry.inbox.update.dialog.remark')">
             <el-input
               type="textarea"
               :autosize="{ minRows: 3, maxRows: 5 }"
               maxlength="255"
               show-word-limit
-              :placeholder="$t('base.inputPlaceholder')"
+              :placeholder="$t('enquiry.inbox.update.track.message')"
               v-model.trim="enquiryStateModel.remark"
             ></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button @click="dialogVisible = false">
+            {{$t('base.cancel')}}
+          </el-button>
           <el-button
             type="primary"
             :disabled="enquiryStateModel.state === enquiryDetail.state"
             @click="handleConfirm"
-            >确定</el-button
+            >
+            {{$t('base.save')}}
+          </el-button
           >
         </span>
       </el-dialog>
@@ -308,13 +319,16 @@
 </template>
 
 <script>
-import extend from '@/plugins/page/paging'
+import extend from '../../../../plugins/page/paging'
+import * as enquiry from '../../../../plugins/api/enquiry'
+import dict from '../../../../plugins/dict'
 
 export default {
   name: 'enquiryDetail',
   extends: extend,
   data () {
     return {
+      ...dict,
       dialogVisible: false,
       enquiryStateModel: {
         state: null
@@ -333,7 +347,7 @@ export default {
       return firstName ? firstName.charAt() : lastName ? lastName.charAt() : ''
     },
     customerLink () {
-      return `/site/${this.siteId}/customer/update/${
+      return `/site/${this.shopCode}/customer/update/${
         this.enquiryDetail.client.id
       }`
     }
@@ -356,23 +370,25 @@ export default {
   },
   methods: {
     /**
+     * 跳转回列表
+     */
+    goBack () {
+      this.$router.push(`/${this.shopCode}/enquiry/inbox`)
+    },
+    /**
      * 添加询盘跟踪记录
      */
     handleConfirm () {
-      if (
-        this.enquiryStateModel.state === this.enquiryDetail.state &&
-        !this.enquiryStateModel.remark
-      ) {
+      if (this.enquiryStateModel.state === this.enquiryDetail.state && !this.enquiryStateModel.remark) {
         this.dialogVisible = false
         return
       }
       const params = {
-        createTime: +this.moment(),
+        createTime: this.utility.timestamp(),
         enquiryId: this.id,
         ...this.enquiryStateModel
       }
-      this.datasource
-        .enquiryRecordAdd(params)
+      enquiry.enquiryUpdate(params)
         .then(result => {
           this.pageValid()
           this.resultMessage(result, success => {
@@ -395,11 +411,10 @@ export default {
      * 获取详情
      */
     getDetail () {
-      this.datasource
-        .enquiryDetail({
-          siteId: this.siteId,
-          id: this.id
-        })
+      enquiry.enquiryDetail({
+        shopCode: this.shopCode,
+        id: this.id
+      })
         .then(result => {
           this.pageValid()
           this.resultMessage(result, success => {
@@ -421,11 +436,10 @@ export default {
      */
     getEnquiryRecord () {
       const params = {
-        siteId: this.siteId,
+        shopCode: this.shopCode,
         id: this.id
       }
-      this.datasource
-        .enquiryRecordList(params)
+      enquiry.enquiryTimeline(params)
         .then(result => {
           this.pageValid()
           this.resultMessage(result, success => {

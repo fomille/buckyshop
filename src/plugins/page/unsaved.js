@@ -50,7 +50,7 @@ export default {
    */
   beforeRouteUpdate (to, from, next) {
     this.id = this.$route.params.id
-    this.siteId = this.$route.params.siteId
+    this.shopCode = this.$route.params.shopCode
     if (this.unsaved) {
       this.$confirm(this.$t('base.leaveWithoutSave'), this.$t('base.oops'), {
         confirmButtonText: this.$t('base.leave'),
