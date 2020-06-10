@@ -163,7 +163,6 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.VUE_APP_ROUTER_BASE,
-  // base: process.env.NODE_ENV === 'production' ? '/en/design/' : '/',
   routes
 })
 
