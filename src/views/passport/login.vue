@@ -118,8 +118,7 @@ export default {
               this.resultMessage(result, (success) => {
                 if (success) {
                   this.$store.commit('setUserModel', result.data)
-                  // location.href = this.$route.query.redirect || '/'
-                  location.href = `/${this.shopCode}/themes`
+                  this.$router.push(this.$route.query.redirect || `/${this.shopCode}/themes`)
                 }
               })
             })

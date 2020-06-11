@@ -339,8 +339,8 @@ export default {
     //   this.value.settings = JSON.parse(this.value.settings)
     // }
     this.model = this.value
-    console.log('model', JSON.stringify(this.model))
-    console.log('schema', JSON.stringify(this.schema))
+    // console.log('model', JSON.stringify(this.model))
+    // console.log('schema', JSON.stringify(this.schema))
     this.debouncedUpdateView = this.getLodash.debounce(this.valueChanged, 500)
     this.verifyDefaultList()
     if (!this.model.sectionAlias) {

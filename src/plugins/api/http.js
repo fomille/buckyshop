@@ -9,7 +9,7 @@ http.defaults.headers.post['Content-Type'] = 'application/json'
 http.defaults.timeout = 1000 * 60
 http.defaults.withCredentials = true
 // http.defaults.baseURL = 'http://202.105.98.154:6030'
-http.defaults.baseURL = '/api2'
+http.defaults.baseURL = '/api'
 // http.defaults.baseURL = 'https://new-dev.buckydrop.com/api'
 /**
  * 请求拦截器

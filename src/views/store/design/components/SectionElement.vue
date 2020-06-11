@@ -25,7 +25,7 @@
         <template v-if="schema.global">
           {{schema.name[language]}}
         </template>
-        <template v-else>{{model.sectionAlias || schema.name[language]}}</template>
+        <template v-else>{{model.data.sectionAlias || schema.name[language]}}</template>
       </el-col>
       <el-col
         :span="3"
@@ -157,8 +157,9 @@ export default {
         this.$emit('add')
       } else {
         this.$emit('display', this.id || this.model.pageModuleCode, this.sectionIndex)
-        if (this.model && this.model.pageModuleCode) {
-          this.scrollSection(this.model.pageModuleCode)
+        const code = this.model.pageModuleCode || this.model.resourceCode
+        if (code) {
+          this.scrollSection(code)
         }
       }
     },

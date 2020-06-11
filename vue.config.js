@@ -3,20 +3,26 @@ module.exports = {
   devServer: {
     port: 8015,
     proxy: {
-      '/api2': {
-        target: process.env.VUE_APP_ApiURL,
+      '/api': {
+        target: process.env.VUE_APP_DevServer,
         // target: 'https://new-dev.buckydrop.com/api',
         // target: 'http://202.105.98.154:6030',
         changeOrigin: true,
         pathRewrite: {
-          '^/api2': ''
+          '^/api': ''
         }
       }
     }
   },
   filenameHashing: false,
+  /**
+   * 打包静态文件存放目录
+   */
   assetsDir: process.env.VUE_APP_ASSETDIR,
-  publicPath: '/',
+  /**
+   * 链接资源路径
+   */
+  publicPath: process.env.VUE_APP_PublicDir,
   css: {
     sourceMap: false
   }

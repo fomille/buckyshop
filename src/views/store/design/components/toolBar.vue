@@ -14,7 +14,7 @@
           <section-element
             key="section-page-header"
             :schema="shopConfig.section.header.schema"
-            v-model="dataset.common.header.data"
+            v-model="dataset.common.header"
             :display-visible="true"
             :section-index="-22"
             :id="dataset.common.header.resourceCode"
@@ -48,7 +48,7 @@
               :active="editSectionCode === dataset.page.modules[index].pageModuleCode"
               :display-visible="true"
               :section-index="index"
-              v-model="o.data"
+              v-model="dataset.page.modules[index]"
               @display="openSettingPanel"
               @message="sendMessage"
               @delete="removeSection"
@@ -73,7 +73,7 @@
           <section-element
             key="section-page-footer"
             :schema="shopConfig.common.footer.schema"
-            v-model="dataset.common.footer.data"
+            v-model="dataset.common.footer"
             :display-visible="true"
             :section-index="-21"
             :id="dataset.common.footer.resourceCode"
@@ -88,18 +88,23 @@
       </el-tab-pane>
       <el-tab-pane label="Theme" name="second">
         <template v-for="(o, index) in shopConfig.config.schema">
-          <section-element
+          <template
             v-if="o.settings && o.settings.length > 0"
-            :id="`setting-${index}`"
-            :key="`section-theme-${index}`"
-            :schema="o"
-            source-group=""
-            :active="editSectionCode === `setting-${index}`"
-            :model="dataset.current"
-            @display="openSettingPanel"
-            @message="sendMessage"
           >
-          </section-element>
+<!--            {{dataset.config.data.current[index]}}-->
+<!--            {{`setting-${index}`}}&#45;&#45;{{editSectionCode}}-->
+            <section-element
+              :id="`setting-${index}`"
+              :key="`section-theme-${index}`"
+              :schema="o"
+              source-group=""
+              :active="editSectionCode === `setting-${index}`"
+              v-model="dataset.config.data.current[index].data"
+              @display="openSettingPanel"
+              @message="sendMessage"
+            >
+            </section-element>
+          </template>
         </template>
         <el-row :gutter="10" class="mt-6 copyright">
           <el-col :span="20" :offset="2">
@@ -233,7 +238,15 @@ export default {
           includeHeader: 1,
           modules: []
         },
-        config: {},
+        config: {
+          data: {
+            current: {
+              Colors: {},
+              General: {},
+              Typography: {}
+            }
+          }
+        },
         shopCode: '',
         templateCode: ''
       },
@@ -288,7 +301,7 @@ export default {
   watch: {
     value: {
       handler (val) {
-        // console.log('变更', JSON.stringify(this.shopConfig))
+        // console.log('变更', JSON.stringify(val.config))
       },
       immediate: true,
       deep: true
@@ -349,8 +362,21 @@ export default {
      * @param official 是否正式添加
      */
     addSection (sectionType, official) {
-      console.log('addSection', sectionType)
-      if (this.schema.schema.section[sectionType]) {
+      if (this.shopConfig.section[sectionType]) {
+        console.log('addSection', sectionType)
+        const code = `design-preview${new Date().getTime()}`
+        this.sendMessage({
+          action: 'addSection',
+          data: {
+            id: code,
+            official: official,
+            moduleType: sectionType,
+            settings: this.shopConfig.section[sectionType].data,
+            template: this.shopConfig.section[sectionType].artTemplate,
+            visible: true
+          }
+        })
+
         // this.getId(official, (id) => {
         //   // console.log(JSON.stringify({
         //   //   action: 'addSection',
@@ -358,8 +384,8 @@ export default {
         //   //     id: id,
         //   //     official: official,
         //   //     moduleType: sectionType,
-        //   //     settings: this.schema.schema.section[sectionType].settings,
-        //   //     template: this.schema.schema.section[sectionType].frontTemplate,
+        //   //     settings: this.shopConfig.section[sectionType].settings,
+        //   //     template: this.shopConfig.section[sectionType].frontTemplate,
         //   //     visible: true
         //   //   }
         //   // }))
@@ -369,8 +395,8 @@ export default {
         //       id: id,
         //       official: official,
         //       moduleType: sectionType,
-        //       settings: this.schema.schema.section[sectionType].settings,
-        //       template: this.schema.schema.section[sectionType].frontTemplate,
+        //       settings: this.shopConfig.section[sectionType].settings,
+        //       template: this.shopConfig.section[sectionType].frontTemplate,
         //       visible: true
         //     }
         //   })
@@ -444,7 +470,7 @@ export default {
       }
       const editor = this.getEditor()
       if (editor) {
-        // console.log(JSON.stringify(data))
+        console.log('send', data)
         editor.postMessage(data, this.targetOrigin)
       }
     },
@@ -479,7 +505,7 @@ export default {
      * 客户端执行后回调通知
      */
     clientCallMessage (e) {
-      if (e.data.foBuilder) {
+      if (e.data.design) {
         this.messageStatus = e.data.message
         switch (e.data.message.action) {
           case 'addSection':
@@ -506,34 +532,32 @@ export default {
     initPanel () {
       this.displaySection = true
       this.tabSlide()
-      // document.querySelector('.editor-settings').classList.add('active')
-      // document.querySelector('.editor-section-panel').classList.remove('active')
       // this.sendMessage({
       //   action: 'update',
       //   data: {
       //     resourceType: 'colors',
-      //     settings: this.dataset.current.colors.settings,
-      //     siteId: this.dataset.page.siteId,
-      //     templateId: this.dataset.templateId
+      //     settings: this.dataset.config.data.current.Colors.data,
+      //     shopCode: this.dataset.page.shopCode,
+      //     templateCode: this.dataset.page.templateCode
       //   }
       // })
       // this.sendMessage({
       //   action: 'update',
       //   data: {
       //     resourceType: 'typography',
-      //     settings: this.dataset.current.typography.settings,
-      //     siteId: this.dataset.page.siteId,
-      //     templateId: this.dataset.templateId
+      //     settings: this.dataset.config.data.current.Typography.data,
+      //     shopCode: this.dataset.page.shopCode,
+      //     templateCode: this.dataset.page.templateCode
       //   }
       // })
-      // if (this.dataset.current.general) {
+      // if (this.dataset.config.data.current.General) {
       //   this.sendMessage({
       //     action: 'update',
       //     data: {
       //       resourceType: 'general',
-      //       settings: this.dataset.current.general.settings,
-      //       siteId: this.dataset.page.siteId,
-      //       templateId: this.dataset.templateId
+      //       settings: this.dataset.config.data.current.General.data,
+      //       shopCode: this.dataset.page.shopCode,
+      //       templateCode: this.dataset.page.templateCode
       //     }
       //   })
       // }
@@ -577,6 +601,7 @@ export default {
      * @param sectionIndex
      */
     openSettingPanel (id, sectionIndex) {
+      console.log(id, sectionIndex)
       this.editSectionCode = id
       this.$emit('editing', true)
     },
@@ -584,7 +609,7 @@ export default {
      * 正式添加section [客户端添加功能回调]
      */
     addSectionExecute (result) {
-      const sectionSchema = this.schema.schema.section[result.resourceType]
+      const sectionSchema = this.shopConfig.section[result.resourceType]
       if (result.official && sectionSchema) {
         const data = {
           id: result.id,
@@ -637,7 +662,7 @@ export default {
             resourceType: 'anchorNavigation',
             siteId: this.dataset.siteId,
             templateId: this.dataset.page.moduleList[sectionIndex].templateId,
-            frontTemplate: this.schema.schema.section[sectionType].frontTemplate,
+            frontTemplate: this.shopConfig.section[sectionType].frontTemplate,
             dynamic: false,
             settings: this.dataset.page.moduleList[sectionIndex].settings,
             id: this.dataset.page.moduleList[sectionIndex].id
@@ -669,7 +694,7 @@ export default {
     if (toolbar) {
       this.toolbarPosition = toolbar
     }
-    this.targetOrigin = `https://${this.siteId}-${this.dataset.templateId}.design.fomille.com/`
+    this.targetOrigin = `http://dev-preview-${this.shopTemplateCode}.mybuckyshop.com/`
   }
 }
 </script>
