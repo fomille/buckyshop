@@ -19,14 +19,21 @@
             {{ utility.timestampToDatetime(entity.updateTime) }}
           </p>
           <div class="publish-tips mt-5">
-            <a class="el-button absolutely el-button--primary" :href="`/${shopCode}/canvas/${entity.shopTemplateCode}`" target="_blank">
+            <el-button
+              @click="designShop(entity)"
+              class="absolutely"
+              type="primary"
+            >
               {{ $t("store.theme.editWeb") }}
-            </a>
+            </el-button>
           </div>
           <div class="publish-tips mt-5">
-            <a class="el-button absolutely el-button--default" :href="`https://${entity.domain}`" target="_blank">
+            <el-button
+              @click="previewSite(entity)"
+              class="absolutely"
+            >
               {{ $t("store.theme.previewWeb") }}
-            </a>
+            </el-button>
           </div>
           <!--          <div-->
           <!--            class="mt-7">-->
@@ -51,7 +58,7 @@
             <div class="screenShot-container scaled">
               <div class="screenShot-content">
                 <div class="screenShot-wrapper">
-                  <iframe class="screenShot-iframe" :src="entity.shopUrl"></iframe>
+                  <iframe class="screenShot-iframe" :src="entity.previewDomain"></iframe>
                 </div>
               </div>
             </div>
@@ -60,7 +67,7 @@
             <div class="screenShot-container scaled">
               <div class="screenShot-content">
                 <div class="screenShot-wrapper screenShot-wrapper-mobile">
-                  <iframe class="screenShot-iframe" :src="entity.shopUrl"></iframe>
+                  <iframe class="screenShot-iframe" :src="entity.previewDomain"></iframe>
                 </div>
               </div>
             </div>
@@ -105,9 +112,13 @@
         </el-table-column>
         <el-table-column label="" width="100">
           <template slot-scope="scope">
-            <router-link class="text-primary" :to="`/${shopCode}/canvas/${scope.row.shopTemplateCode}`">
+            <el-button
+              type="text"
+              size="small"
+              @click="designShop(scope.row)"
+            >
               {{ $t("store.theme.editWeb") }}
-            </router-link>
+            </el-button>
           </template>
         </el-table-column>
         <el-table-column label="" width="100">
@@ -118,7 +129,7 @@
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
               <el-dropdown-menu slot="dropdown">
-                <!--                <el-dropdown-item :command="{ data: scope.row, op: 'preview' }">{{ $t("base.preview") }}</el-dropdown-item>-->
+                <el-dropdown-item :command="{ data: scope.row, op: 'preview' }">{{ $t("base.preview") }}</el-dropdown-item>
                 <el-dropdown-item v-if="scope.row.current === 0" :command="{ data: scope.row, op: 'publish' }">{{ $t("store.theme.setDefaultTheme") }}</el-dropdown-item>
                 <el-dropdown-item :command="{ data: scope.row, op: 'rename' }">{{ $t("base.rename") }}</el-dropdown-item>
                 <!--                <el-dropdown-item :command="{ data: scope.row, op: 'duplicate' }">{{ $t("base.duplicate") }}</el-dropdown-item>-->
@@ -150,23 +161,23 @@
         <el-button size="small" :loading="loading" type="primary" @click="publishSite(false)">{{ this.$t('base.publish') }}</el-button>
       </div>
     </el-dialog>
-<!--    <explore-dataset-->
-<!--      @closeExplore="closeExplore"-->
-<!--      :display="exploreVisible"-->
-<!--    ></explore-dataset>-->
+    <explore-themes
+      @closeExplore="closeExplore"
+      :display="exploreVisible"
+    ></explore-themes>
   </page-loading>
 </template>
 
 <script>
 import extend from '../../../plugins/page/base'
-// import ExploreThemes from '../../../components/explore-dataset'
+import ExploreThemes from './components/explore-themes'
 import * as theme from '../../../plugins/api/theme'
 
 export default {
   name: 'siteTheme',
   extends: extend,
   components: {
-    // ExploreThemes
+    ExploreThemes
   },
   computed: {
     /**
@@ -178,7 +189,9 @@ export default {
   },
   data () {
     return {
-      entity: {},
+      entity: {
+        previewDomain: ''
+      },
       dataset: [],
       updateModel: {},
       updateVisible: false,
@@ -191,9 +204,16 @@ export default {
       }
     }
   },
+  created () {
+    this.getData()
+  },
   methods: {
-    updateAlt (value) {
-      console.log('updateAlt', value)
+    /**
+     * 站点设置
+     */
+    designShop (row) {
+      const router = this.$router.resolve(`/${this.shopCode}/canvas/${row.shopTemplateCode}`)
+      this.utility.openSite(router.href)
     },
     getShop () {
       theme.shops({
@@ -220,9 +240,6 @@ export default {
         case 'preview':
           this.previewSite(command.data)
           break
-        case 'duplicate':
-          this.duplicateTheme(command.data)
-          break
         case 'delete':
           this.removeTheme(command.data)
           break
@@ -236,47 +253,9 @@ export default {
       }
     },
     /**
-       * 复制主题
-       */
-    duplicateTheme (data) {
-      this.$confirm(this.$t('store.theme.duplicate.content'), this.$t('store.theme.duplicate.title'), {
-        confirmButtonText: this.$t('base.confirm'),
-        cancelButtonText: this.$t('base.cancel'),
-        closeOnClickModal: false,
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true
-            this.datasource.templateDuplicate({
-              id: data.id
-            })
-              .then(result => {
-                result.options = {
-                  success: this.$t('base.duplicateSuccess')
-                }
-                this.resultMessage(result, (success) => {
-                  if (success) {
-                    this.getSiteThemes()
-                  }
-                })
-                instance.confirmButtonLoading = false
-                done()
-              })
-              .catch(error => {
-                instance.confirmButtonLoading = false
-                this.networkMistake(error)
-                done()
-              })
-          } else {
-            instance.confirmButtonLoading = false
-            done()
-          }
-        }
-      })
-    },
-    /**
        * 删除主题
        */
-    removeTheme (data) {
+    removeTheme (row) {
       this.$confirm(this.$t('store.theme.delete.content'), this.$t('store.theme.delete.title'), {
         confirmButtonText: this.$t('base.confirm'),
         cancelButtonText: this.$t('base.cancel'),
@@ -284,15 +263,16 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
-            this.datasource.templateDelete({
-              id: data.id
+            theme.templateDelete({
+              shopTemplateCode: row.shopTemplateCode,
+              shopCode: row.shopCode
             })
               .then(result => {
                 result.options = {
                   action: this.actionType.delete
                 }
-                this.resultMessage(result, () => {
-                  this.getSiteThemes()
+                this.resultMessage(result, (success) => {
+                  this.success()
                 })
                 instance.confirmButtonLoading = false
                 done()
@@ -324,7 +304,7 @@ export default {
     /**
        * 发布主题
        */
-    publishTheme (id, isDefault) {
+    publishTheme () {
       this.loading = true
       theme.templateUpdate({
         shopTemplateCode: this.shopTemplateCode,
@@ -335,12 +315,8 @@ export default {
           result.options = {
             success: this.$t('base.publishSuccess')
           }
-          this.resultMessage(result, success => {
+          this.resultMessage(result, (success) => {
             if (success) {
-              // this.entity.changed = false
-              // if (!isDefault) {
-              //   this.entity = JSON.parse(JSON.stringify(this.updateModel))
-              // }
               this.getData()
             }
           })
@@ -374,7 +350,7 @@ export default {
               action: this.actionType.update,
               formName: 'update'
             }
-            this.resultMessage(result, success => {
+            this.resultMessage(result, (success) => {
               if (success) {
                 this.getData()
                 if (data.current === 1) {
@@ -393,18 +369,19 @@ export default {
        */
     closeExplore (data, func) {
       if (data) {
-        this.datasource.templateApply({
+        theme.templateAdd({
           shopCode: this.shopCode,
-          templateCode: data.id
+          styleCode: data.styleCode,
+          title: data.styleName
         })
           .then(result => {
             this.exploreStatus(func)
             result.options = {
               success: this.$t('base.addition.success')
             }
-            this.resultMessage(result, success => {
+            this.resultMessage(result, (success) => {
               if (success) {
-                this.getSiteThemes()
+                this.getData()
               }
             })
           })
@@ -426,18 +403,6 @@ export default {
       }
     },
     /**
-       * 获取当前主题
-       */
-    getCurrentTheme (result) {
-      if (result.success) {
-        this.entity = result.data
-        this.unsaved = false
-        // console.log(JSON.stringify(this.entity))
-      } else {
-        // this.errorMessage(result)
-      }
-    },
-    /**
        * 数据请求
        */
     getData () {
@@ -445,6 +410,7 @@ export default {
         shopCode: this.shopCode
       })
         .then(result => {
+          this.pageValid()
           this.resultMessage(result, (success) => {
             if (success) {
               this.dataset = result.data
@@ -457,6 +423,7 @@ export default {
           })
         })
         .catch(error => {
+          this.pageInvalid()
           this.networkMistake(error)
         })
     },
@@ -464,13 +431,8 @@ export default {
        * 预览网站
        */
     previewSite (data) {
-      this.utility.openSite(`http://${this.shopCode}-${data.id}.design.fomille.com/`)
+      this.utility.openSite(data.previewDomain)
     }
-  },
-  created () {
-    this.getData()
-    this.pageValid()
-    // this.getShop()
   }
 }
 </script>

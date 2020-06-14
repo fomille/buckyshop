@@ -85,7 +85,7 @@
         <div :class="`design-website-container ${editSectionStatus}`">
           <div class="design-website-content">
             <div class="design-website-wrapper">
-              <iframe class="design-website-iframe" :src="`http://dev-preview-${shopTemplateCode}.mybuckyshop.com/index.html`" id="editor"></iframe>
+              <iframe class="design-website-iframe" :src="`//dev-preview-${shopTemplateCode}.mybuckyshop.com/index.html`" id="editor"></iframe>
             </div>
           </div>
         </div>

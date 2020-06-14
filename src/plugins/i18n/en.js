@@ -28,7 +28,7 @@ export default {
     }
   },
   base: {
-    home: '首页',
+    home: 'Home',
     confirm: 'OK',
     cancel: 'Cancel',
     discard: '取消',
@@ -46,14 +46,14 @@ export default {
     register: '注册',
     login: '登录',
     more: 'More',
-    back: '返回',
-    edit: '编辑',
+    back: 'Back',
+    edit: 'Edit',
     leaveWithoutSave: '当前页面内容尚未保存，离开将会丢失未保存的内容。是否确认离开？',
-    oops: '提示',
+    oops: 'OOPS',
     unsaved: 'Unsaved changes',
     loading: 'loading',
     complete: '完成',
-    remove: '移除',
+    remove: 'Remove',
     orderBy: 'Order by',
     keyword: 'Please input keywords',
     inputPlaceholder: '请输入内容',
@@ -64,7 +64,7 @@ export default {
       start: 'Start time',
       deadline: 'Deadline'
     },
-    view: '查看',
+    view: 'View',
     search: {
       all: 'All',
       button: 'Search'
@@ -518,7 +518,6 @@ export default {
         heading: '当前主题内容已发生变更，请重新发布',
         button: '立即发布'
       },
-      visitDemo: '查看demo网站',
       current: {
         heading: 'Current theme',
         subheading: 'This is the theme customers see when they visit your store.'
@@ -532,7 +531,7 @@ export default {
         content: 'Are you sure you want to publish theme? This will replace your current theme.'
       },
       delete: {
-        title: 'OPPS',
+        title: 'OOPS',
         content: 'Are you sure you want to delete this theme?'
       },
       rename: {
@@ -541,14 +540,17 @@ export default {
         placeholder: 'Please input name',
         error: 'theme name length is less than 32 bits'
       },
-      duplicate: {
-        title: '复制主题',
-        content: '复制此主题的内容，并以此创建一个新的主题'
-      },
       tableHeader: {
         title: 'Name',
         updateTime: 'Update date',
         styleName: 'Style'
+      },
+      explore: {
+        freeTheme: 'Explore free themes',
+        all: 'All',
+        preview: 'Preview',
+        add: 'Add to theme library',
+        select: 'Select'
       }
     }
   },
