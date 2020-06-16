@@ -15,6 +15,7 @@ import elementUI from 'element-ui'
 import http from './plugins/api/http'
 import vueLodash from 'lodash'
 import global from './plugins/data'
+import Tinymce from './components/tinymce-editor'
 
 Vue.use(elementUI)
 Vue.config.productionTip = false
@@ -23,6 +24,7 @@ Vue.prototype.axios = http
 Vue.prototype.global = global
 Vue.prototype.getLodash = vueLodash
 
+Vue.component('RichTextEditor', Tinymce)
 Vue.component('PageBlock', PageBlock)
 Vue.component('PageBlockBase', PageBlockBase)
 Vue.component('PageLoading', PageLoading)

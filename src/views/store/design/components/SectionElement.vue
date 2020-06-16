@@ -147,7 +147,7 @@ export default {
   },
   methods: {
     getDelete () {
-      return '3000,4000'.indexOf(this.sourceGroup) > -1 && this.sourceGroup !== '' && this.active
+      return ('3000,4000'.indexOf(this.sourceGroup) > -1 && this.sourceGroup !== '' && this.active) && this.schema.removable
     },
     /**
      * 显示设置参数

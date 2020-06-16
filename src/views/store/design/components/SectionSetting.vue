@@ -290,6 +290,14 @@ export default {
       type: String,
       default: () => ''
     },
+    resourceCode: {
+      type: String,
+      default: () => ''
+    },
+    resourceType: {
+      type: String,
+      default: () => ''
+    },
     /**
      * 消息状态
      */
@@ -443,12 +451,11 @@ export default {
      */
     copyToClip () {
       this.$emit('copyToClip', {
+        templateCode: this.templateCode,
         resourceType: this.schema.type,
         shopCode: this.shopCode,
-        templateCode: this.templateCode,
-        frontTemplate: this.schema.frontTemplate || '',
-        dynamic: this.schema.dynamic,
-        settings: this.model,
+        data: this.model,
+        pageModuleCode: this.id,
         id: `pre${new Date().getTime()}`,
         visible: true
       })
@@ -459,17 +466,15 @@ export default {
     valueChanged () {
       if (!this.firstLoading) {
         this.funcStatus.loading = true
-        // console.log('settings', JSON.stringify(this.model))
         this.$emit('message', {
           action: 'update',
           data: {
+            resourceCode: this.resourceCode,
+            templateCode: this.templateCode,
             resourceType: this.schema.type,
             shopCode: this.shopCode,
-            templateCode: this.templateCode,
-            frontTemplate: this.schema.frontTemplate || '',
-            dynamic: this.schema.dynamic,
-            settings: this.model,
-            id: this.model.id
+            pageModuleCode: this.id,
+            data: this.model
           }
         })
       } else {

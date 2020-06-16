@@ -1229,7 +1229,7 @@ header {
     .design-section-panel .section-element .section-element-move {
       cursor: move !important;
       position: relative;
-      z-index: 100;
+      z-index: 10;
       text-align: center; }
     .design-section-panel .section-element:after {
       position: absolute;

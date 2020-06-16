@@ -85,12 +85,11 @@
       <h6>
         {{ schema.name[language] }}
       </h6>
-<!--      <link-picker-->
-<!--        :site-type="siteModel.siteType.toString()"-->
-<!--        :width="220"-->
-<!--        size="small"-->
-<!--        v-model="model[schema.field]"-->
-<!--      ></link-picker>-->
+      <link-picker
+        :width="220"
+        size="small"
+        v-model="model[schema.field]"
+      ></link-picker>
     </template>
     <template v-else-if="schema.type === 'colorPicker'">
       <p>
@@ -179,6 +178,8 @@ import ImagePicker from './picker/ImagePicker'
 import VideoPicker from './picker/VideoPicker'
 import richText from '../../../../assets/image/rich-text.jpg'
 import PositiveInteger from './picker/PositiveInteger'
+import LinkPicker from './picker/LinkPicker'
+// import RichTextEditor from '../../../../components/richText'
 
 export default {
   name: 'section-widget',
@@ -186,7 +187,9 @@ export default {
     PositiveInteger,
     VideoPicker,
     ImagePicker,
-    ProductCollectionPicker
+    ProductCollectionPicker,
+    LinkPicker
+    // RichTextEditor
   },
   data () {
     return {

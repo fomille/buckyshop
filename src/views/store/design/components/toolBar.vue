@@ -138,6 +138,8 @@
           :shop-code="shopCode"
           :id="dataset.common.header.resourceCode"
           :template-code="dataset.templateCode"
+          :resource-code="shopConfig.section.header.resourceCode"
+          :resource-type="shopConfig.section.header.resourceType"
           :schema="shopConfig.section.header.schema"
           v-model="dataset.common.header.data"
           @close="closeSettingPanel"
@@ -156,6 +158,8 @@
           :shop-code="shopCode"
           :template-code="dataset.templateCode"
           :schema="shopConfig.section.footer.schema"
+          :resource-code="shopConfig.section.footer.resourceCode"
+          :resource-type="shopConfig.section.footer.resourceType"
           v-model="dataset.common.footer.data"
           @close="closeSettingPanel"
           @message="updateSettings"
@@ -171,6 +175,8 @@
           :id="o.pageModuleCode"
           :key="o.pageModuleCode"
           :message-status="messageStatus"
+          :resource-code="o.resourceCode"
+          :resource-type="shopConfig.section[o.resourceType].resourceType"
           :shop-code="shopCode"
           :template-code="dataset.templateCode"
           v-model="o.data"
@@ -263,8 +269,7 @@ export default {
       },
       targetOrigin: '',
       newSectionVisible: false,
-      dataId: '',
-      collectionId: '',
+      collectionCode: '',
       /**
        * section 临时ID
        */
@@ -301,21 +306,21 @@ export default {
   watch: {
     value: {
       handler (val) {
-        // console.log('变更', JSON.stringify(val.config))
+        this.setOrigin()
+        // console.log('变更', JSON.stringify(val.page))
       },
       immediate: true,
       deep: true
-    },
-    dataId (newVal) {
-      if (newVal.indexOf('?') > -1) {
-        this.dataId = newVal.split('?')[0]
-      }
-    },
-    snapshot (newVal) {
-      // console.log('snapshot', newVal)
-      if (newVal) {
-        this.screenShot()
-      }
+    }
+  },
+  created () {
+    this.dataset = this.value
+    window.addEventListener('message', (e) => {
+      this.clientCallMessage(e)
+    }, false)
+    const toolbar = localStorage.getItem('toolbar')
+    if (toolbar) {
+      this.toolbarPosition = toolbar
     }
   },
   methods: {
@@ -350,11 +355,11 @@ export default {
      * 寻找锚点组件和锚钉，更新其配置
      */
     updateSettings (data) {
-      // data.data.pageType = this.dataset.page.pageType
-      // if (data.data.moduleType === 'anchorPin') {
-      //   this.anchorNavigation()
-      // }
-      // this.sendMessage(data)
+      data.data.pageType = this.dataset.page.pageType
+      if (data.data.moduleType === 'anchorPin') {
+        this.anchorNavigation()
+      }
+      this.sendMessage(data)
     },
     /**
      * 添加section
@@ -363,7 +368,7 @@ export default {
      */
     addSection (sectionType, official) {
       if (this.shopConfig.section[sectionType]) {
-        console.log('addSection', sectionType)
+        // console.log('addSection', sectionType)
         const code = `design-preview${new Date().getTime()}`
         this.sendMessage({
           action: 'addSection',
@@ -462,11 +467,9 @@ export default {
      */
     sendMessage (data) {
       if (data.action && data.action === 'update') {
-        if (this.dataId.indexOf('?') > -1) {
-          this.dataId = this.dataId.split('?')[0]
-        }
-        data.data.dataId = this.dataId
-        data.data.collectionId = this.collectionId
+        data.data.collectionCode = this.collectionCode
+        data.data.pageCode = this.dataset.page.pageCode
+        data.data.dynamic = true
       }
       const editor = this.getEditor()
       if (editor) {
@@ -486,22 +489,6 @@ export default {
       return null
     },
     /**
-     * 推送截图信息
-     */
-    screenShot () {
-      // console.log('发送截图命令', JSON.stringify({
-      //   templateId: this.dataset.templateId,
-      //   siteId: this.dataset.page.siteId
-      // }))
-      // this.sendMessage({
-      //   action: 'screenShot',
-      //   data: {
-      //     templateCode: this.dataset.templateCode,
-      //     shopCode: this.dataset.page.shopCode
-      //   }
-      // })
-    },
-    /**
      * 客户端执行后回调通知
      */
     clientCallMessage (e) {
@@ -515,8 +502,7 @@ export default {
             this.removeSectionExecute(e.data.message)
             break
           case 'design':
-            this.dataId = e.data.message.dataId
-            this.collectionId = e.data.message.collectionId
+            this.collectionCode = e.data.message.collectionCode
             this.initPanel()
             this.$emit('design', e.data.message)
             break
@@ -532,35 +518,35 @@ export default {
     initPanel () {
       this.displaySection = true
       this.tabSlide()
-      // this.sendMessage({
-      //   action: 'update',
-      //   data: {
-      //     resourceType: 'colors',
-      //     settings: this.dataset.config.data.current.Colors.data,
-      //     shopCode: this.dataset.page.shopCode,
-      //     templateCode: this.dataset.page.templateCode
-      //   }
-      // })
-      // this.sendMessage({
-      //   action: 'update',
-      //   data: {
-      //     resourceType: 'typography',
-      //     settings: this.dataset.config.data.current.Typography.data,
-      //     shopCode: this.dataset.page.shopCode,
-      //     templateCode: this.dataset.page.templateCode
-      //   }
-      // })
-      // if (this.dataset.config.data.current.General) {
-      //   this.sendMessage({
-      //     action: 'update',
-      //     data: {
-      //       resourceType: 'general',
-      //       settings: this.dataset.config.data.current.General.data,
-      //       shopCode: this.dataset.page.shopCode,
-      //       templateCode: this.dataset.page.templateCode
-      //     }
-      //   })
-      // }
+      this.sendMessage({
+        action: 'update',
+        data: {
+          resourceType: 'colors',
+          settings: this.dataset.config.data.current.Colors.data,
+          shopCode: this.dataset.page.shopCode,
+          templateCode: this.dataset.page.templateCode
+        }
+      })
+      this.sendMessage({
+        action: 'update',
+        data: {
+          resourceType: 'typography',
+          settings: this.dataset.config.data.current.Typography.data,
+          shopCode: this.dataset.page.shopCode,
+          templateCode: this.dataset.page.templateCode
+        }
+      })
+      if (this.dataset.config.data.current.General) {
+        this.sendMessage({
+          action: 'update',
+          data: {
+            resourceType: 'general',
+            settings: this.dataset.config.data.current.General.data,
+            shopCode: this.dataset.page.shopCode,
+            templateCode: this.dataset.page.templateCode
+          }
+        })
+      }
     },
     /**
      * 更新截图
@@ -683,18 +669,10 @@ export default {
           id: id
         }
       })
+    },
+    setOrigin () {
+      this.targetOrigin = 'https:' + this.dataset.page.url
     }
-  },
-  created () {
-    this.dataset = this.value
-    window.addEventListener('message', (e) => {
-      this.clientCallMessage(e)
-    }, false)
-    const toolbar = localStorage.getItem('toolbar')
-    if (toolbar) {
-      this.toolbarPosition = toolbar
-    }
-    this.targetOrigin = `http://dev-preview-${this.shopTemplateCode}.mybuckyshop.com/`
   }
 }
 </script>

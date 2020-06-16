@@ -63,3 +63,13 @@ export const styleRTagList = params => http.post('/buckyshop/template/tpl/style-
  * Add shop template
  */
 export const templateAdd = params => http.post('/buckyshop/template/shop-template/add', params)
+
+/**
+ * 页面更新
+ */
+export const builderUpdate = params => http.post('/buckyshop/template/shop-page/new-save', params)
+
+/**
+ * URL搜索
+ */
+export const urlSearch = params => http.post('/buckyshop/template/url/search', params)

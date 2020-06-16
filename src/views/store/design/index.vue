@@ -39,15 +39,15 @@
                 <el-dropdown-menu class="page-list" slot="dropdown">
                   <el-dropdown-item
                     v-for="o in pages['systemPages']"
-                    :key="o.id"
-                    :command="o.id"
+                    :key="o.pageCode"
+                    :command="o.pageCode"
                   >
                     {{o.title}}
                   </el-dropdown-item>
                   <el-dropdown-item
                     v-for="(o, index) in pages['customPages']"
-                    :key="o.id"
-                    :command="o.id"
+                    :key="o.pageCode"
+                    :command="o.pageCode"
                     :divided="index === 0"
                   >
                     {{o.title}}
@@ -85,7 +85,7 @@
         <div :class="`design-website-container ${editSectionStatus}`">
           <div class="design-website-content">
             <div class="design-website-wrapper">
-              <iframe class="design-website-iframe" :src="`//dev-preview-${shopTemplateCode}.mybuckyshop.com/index.html`" id="editor"></iframe>
+              <iframe class="design-website-iframe" :src="`https:${pageURL}`" id="editor"></iframe>
             </div>
           </div>
         </div>
@@ -202,6 +202,15 @@ export default {
     this.unsaved = true
     this.getData()
   },
+  watch: {
+    dataset: {
+      handler () {
+        this.unsaved = true
+      },
+      immediate: true,
+      deep: true
+    }
+  },
   methods: {
     /**
      * 退出编回
@@ -291,10 +300,9 @@ export default {
           this.resultMessage(result, (success) => {
             if (success) {
               result.data.modules.forEach((o) => {
-                o.settings = o.settings || {}
                 try {
-                  if (!o.settings.sectionAlias) {
-                    o.settings.sectionAlias = ''
+                  if (!o.data.sectionAlias) {
+                    o.data.sectionAlias = ''
                   }
                 } catch (e) {
                   console.log(e, o)
@@ -319,10 +327,10 @@ export default {
      * @param data
      */
     designModel (data) {
-      // if (!(data.pageType === this.pageData.pageType && data.pageId === this.pageData.id)) {
-      //   this.pageDesignStatus = true
-      //   this.changePage(data.pageId)
-      // }
+      if (data.pageCode !== this.pageData.pageCode) {
+        this.pageDesignStatus = true
+        this.changePage(data.pageCode)
+      }
     },
     /**
      * 工具条位置
@@ -346,56 +354,47 @@ export default {
     },
     /**
      * 切换页面
-     * @param id
+     * @param pageCode
      */
-    changePage (id) {
-      // if (id === 'fo-add-custom-page') {
-      //   let o = window.open('', '_blank', '')
-      //   o.location.href = `/site/${this.shopCode}/pages`
-      // } else {
-      //   let pages = this.unionPages.filter((o) => {
-      //     return o.id === id
-      //   })
-      //   if (pages.length > 0) {
-      //     this.pageData = pages[0]
-      //     if (!this.pageDesignStatus) {
-      //       this.pageURL = this.pageData['previewUrl'] + '?' + new Date().getTime()
-      //     }
-      //     this.pageDesignStatus = false
-      //     this.getPageData(id)
-      //   }
-      // }
+    changePage (pageCode) {
+      if (pageCode === 'fo-add-custom-page') {
+        // let o = window.open('', '_blank', '')
+        // o.location.href = `/site/${this.shopCode}/pages`
+      } else {
+        const pages = this.unionPages.filter((o) => {
+          return o.pageCode === pageCode
+        })
+        if (pages.length > 0) {
+          this.pageData = pages[0]
+          if (!this.pageDesignStatus) {
+            this.pageURL = this.pageData.previewUrl + '?' + new Date().getTime()
+          }
+          this.pageDesignStatus = false
+          this.getPageData(pageCode)
+        }
+      }
     },
     /**
      *  保存配置
      */
     saveChanges () {
+      // console.log(JSON.stringify(this.dataset))
       // this.dataset.templateId = this.themeId
-      // this.datasource.builderConfigSave({
-      //   shopCode: this.dataset.shopCode,
-      //   templateId: this.dataset.templateId,
-      //   current: this.dataset.current,
-      //   layout: this.dataset.layout,
-      //   page: {
-      //     id: this.dataset.page.id,
-      //     shopCode: this.dataset.page.shopCode,
-      //     moduleList: this.dataset.page.moduleList
-      //   }
-      // })
-      //   .then(result => {
-      //     this.resultMessage(result, (success) => {
-      //       if (success) {
-      //         this.updateScreenShot = this.dataset.page.pageType === 'home'
-      //         this.$message({
-      //           message: this.$t('design.saveSuccess'),
-      //           type: 'success'
-      //         })
-      //       }
-      //     })
-      //   })
-      //   .catch(error => {
-      //     this.networkMistake(error)
-      //   })
+      http.builderUpdate(this.dataset)
+        .then(result => {
+          this.resultMessage(result, (success) => {
+            if (success) {
+              this.updateScreenShot = this.dataset.page.pageType === 'home'
+              this.$message({
+                message: this.$t('design.saveSuccess'),
+                type: 'success'
+              })
+            }
+          })
+        })
+        .catch(error => {
+          this.networkMistake(error)
+        })
     }
   }
 }

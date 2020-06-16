@@ -136,6 +136,55 @@ export default {
           required: ''
         }
       }
+    },
+    /**
+     * 接链选择器
+     */
+    linkPicker: {
+      placeholder: 'Find or paste link',
+      records: 'rows',
+      menu: [
+        {
+          label: 'Home',
+          url: '/index.html#Home'
+        },
+        {
+          label: 'Search',
+          url: '/search.html#Search'
+        },
+        {
+          label: 'Collection',
+          type: 'collection',
+          async: true,
+          all: {
+            title: 'All Collection',
+            url: '/collections.html#All Collection'
+          }
+        },
+        {
+          label: 'Products',
+          type: 'product',
+          async: true,
+          all: {
+            title: 'All Products',
+            url: '/collections/all.html#All Products'
+          }
+        },
+        {
+          label: 'Page',
+          type: 'page',
+          async: true
+        },
+        {
+          label: 'Inquiry Form',
+          type: 'inquiryForm',
+          async: true
+        },
+        {
+          label: 'None',
+          url: '#None'
+        }
+      ]
     }
   },
   /**
@@ -657,7 +706,7 @@ export default {
         'zh-CN': '添加模块'
       }
     },
-    saveSuccess: '保存成功',
+    saveSuccess: 'Saved successfully',
     section: '模块',
     settings: '主题',
     addSection: 'Select Section'
