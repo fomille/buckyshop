@@ -1,16 +1,16 @@
 /*
 Error: File to import not found or unreadable: ~element-ui/packages/theme-chalk/src/index.
-        on line 6 of element-variables.scss
+        on line 7 of element-variables.scss
 
-1: /* 改变主题色变量 *\/
-2: $--color-primary: #1890FF;
-3: 
-4: /* 改变 icon 字体路径变量，必需 *\/
-5: $--font-path: '~element-ui/lib/theme-chalk/fonts';
-6: @import "~element-ui/packages/theme-chalk/src/index";
+2: /* 改变主题色变量 *\/
+3: $--color-primary: #1890FF;
+4: 
+5: /* 改变 icon 字体路径变量，必需 *\/
+6: $--font-path: '~element-ui/lib/theme-chalk/fonts';
+7: @import "~element-ui/packages/theme-chalk/src/index";
 
 Backtrace:
-element-variables.scss:6
+element-variables.scss:7
 /Library/Ruby/Gems/2.6.0/gems/sass-3.7.4/lib/sass/tree/import_node.rb:67:in `rescue in import'
 /Library/Ruby/Gems/2.6.0/gems/sass-3.7.4/lib/sass/tree/import_node.rb:44:in `import'
 /Library/Ruby/Gems/2.6.0/gems/sass-3.7.4/lib/sass/tree/import_node.rb:28:in `imported_file'
@@ -48,4 +48,4 @@ element-variables.scss:6
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Error: File to import not found or unreadable: ~element-ui/packages/theme-chalk/src/index.\A         on line 6 of element-variables.scss\A \A 1: /* 改变主题色变量 */\A 2: $--color-primary: #1890FF;\A 3: \A 4: /* 改变 icon 字体路径变量，必需 */\A 5: $--font-path: '~element-ui/lib/theme-chalk/fonts';\A 6: @import \"~element-ui/packages/theme-chalk/src/index\";"; }
+  content: "Error: File to import not found or unreadable: ~element-ui/packages/theme-chalk/src/index.\A         on line 7 of element-variables.scss\A \A 2: /* 改变主题色变量 */\A 3: $--color-primary: #1890FF;\A 4: \A 5: /* 改变 icon 字体路径变量，必需 */\A 6: $--font-path: '~element-ui/lib/theme-chalk/fonts';\A 7: @import \"~element-ui/packages/theme-chalk/src/index\";"; }

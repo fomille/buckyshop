@@ -17,10 +17,8 @@
         <tool-bar
           v-model="dataset"
           :shop-config="shopConfig"
-          :snapshot="updateScreenShot"
           @design="designModel"
           @toolbar="changeToolbar"
-          @updateSnapshot="updateSnapshot"
           @editing="editSection"
         >
         </tool-bar>
@@ -57,7 +55,7 @@
                     key="fo-add-custom-page"
                     command="fo-add-custom-page"
                   >
-                    <i class="fo-add"></i>
+                    <i class="el-icon-plus"></i>
                     {{ $t('design.addPage')}}
                   </el-dropdown-item>
                 </el-dropdown-menu>
@@ -186,10 +184,6 @@ export default {
       },
       unionPages: [],
       pageDesignStatus: false,
-      /**
-       * 是否更新首页截屏
-       */
-      updateScreenShot: false,
       pageData: {
         title: 'Product Pages',
         previewUrl: ''
@@ -216,7 +210,7 @@ export default {
      * 退出编回
      */
     exitDesign () {
-      this.$confirm(this.$t('design.exit'), this.$t('base.opps'), {
+      this.$confirm(this.$t('design.exit'), this.$t('base.oops'), {
         confirmButtonText: this.$t('base.leave'),
         cancelButtonText: this.$t('base.cancel')
       }).then(() => {
@@ -289,8 +283,9 @@ export default {
     /**
      * 获取编辑页面的数据
      * @param pageCode
+     * @param navbar
      */
-    getPageData (pageCode) {
+    getPageData (pageCode, navbar) {
       if (pageCode && !this.utility.isEmpty(pageCode)) {
         http.pageDetail({
           shopCode: this.shopCode,
@@ -311,6 +306,14 @@ export default {
               this.dataset.page = result.data
               this.dataset.shopCode = this.shopCode
               this.dataset.templateCode = this.shopTemplateCode
+              if (navbar) {
+                this.pageData = {
+                  title: result.data.title,
+                  previewUrl: result.data.url,
+                  pageCode: result.data.pageCode,
+                  pageType: result.data.pageType
+                }
+              }
               this.$nextTick(() => {
                 this.unsaved = false
               })
@@ -340,12 +343,6 @@ export default {
       this.toolbarPosition = value
     },
     /**
-     * 首页截屏
-     */
-    updateSnapshot () {
-      this.updateScreenShot = false
-    },
-    /**
      * 编辑面板
      * @param status 是否编辑
      */
@@ -358,8 +355,7 @@ export default {
      */
     changePage (pageCode) {
       if (pageCode === 'fo-add-custom-page') {
-        // let o = window.open('', '_blank', '')
-        // o.location.href = `/site/${this.shopCode}/pages`
+        this.utility.openSite(`/en/shop/${this.shopCode}/store/pages/add/`)
       } else {
         const pages = this.unionPages.filter((o) => {
           return o.pageCode === pageCode
@@ -371,6 +367,8 @@ export default {
           }
           this.pageDesignStatus = false
           this.getPageData(pageCode)
+        } else {
+          this.getPageData(pageCode, true)
         }
       }
     },
@@ -378,13 +376,16 @@ export default {
      *  保存配置
      */
     saveChanges () {
-      // console.log(JSON.stringify(this.dataset))
-      // this.dataset.templateId = this.themeId
+      this.dataset.page.modules.forEach((o, index) => {
+        o.sort = index
+        if (o.pageModuleCode.indexOf('design-preview-') !== -1) {
+          o.pageModuleCode = ''
+        }
+      })
       http.builderUpdate(this.dataset)
         .then(result => {
           this.resultMessage(result, (success) => {
             if (success) {
-              this.updateScreenShot = this.dataset.page.pageType === 'home'
               this.$message({
                 message: this.$t('design.saveSuccess'),
                 type: 'success'

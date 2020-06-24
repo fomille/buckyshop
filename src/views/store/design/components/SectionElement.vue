@@ -156,10 +156,14 @@ export default {
       if (this.schema.type === 'addition') {
         this.$emit('add')
       } else {
-        this.$emit('display', this.id || this.model.pageModuleCode, this.sectionIndex)
-        const code = this.model.pageModuleCode || this.model.resourceCode
-        if (code) {
-          this.scrollSection(code)
+        if (this.schema.settings.length > 0) {
+          this.$emit('display', this.id || this.model.pageModuleCode, this.sectionIndex)
+          const code = this.model.pageModuleCode || this.model.resourceCode
+          if (code) {
+            this.scrollSection(code)
+          }
+        } else {
+          this.$emit('display', '')
         }
       }
     },

@@ -3,110 +3,106 @@
     <div class="collection-picker">
       <h6>
         <router-link target="_blank" class="float-right" :to="getAddUrl()">
-          {{ $t('design.picker.inquiryForm.edit') }}
+          {{ $t('design.picker.inquiryForm.add') }}
           <i class="fo-export"></i>
         </router-link>
         {{ name[language] }}
       </h6>
-      <div
-        class="collection-picker-none"
-        @click="displayExplore=true"
-        v-if="entity.id === ''">
+      <div class="collection-picker-none"
+           @click="displayExplore=true"
+           v-if="!entity.id">
         <p class="text-center">
-          <i class="fo-edit"></i>
+          <i class="el-icon-plus"></i>
           {{ $t('design.picker.inquiryForm.select') }}
         </p>
       </div>
-      <div class="collection-picker-content" v-if="entity.id !== ''">
-        <p class="form-name">
+      <div class="collection-picker-content" v-if="entity.id">
+        <p style="display: flex;align-items: center">
           {{ entity.title }}
         </p>
       </div>
-      <el-button-group v-if="entity.id !== ''">
+      <el-button-group v-if="entity.id">
         <el-button @click="displayExplore=true">
-          <i class="fo-edit"></i>
+          <i class="el-icon-edit"></i>
         </el-button>
         <el-button @click="clearData">
-          <i class="fo-delete"></i>
+          <i class="el-icon-delete"></i>
         </el-button>
       </el-button-group>
     </div>
-    <div v-if="displayExplore" class="setting-sidebar">
-      <h4 class="setting-sidebar-title" @click="displayExplore=false">
+    <div v-if="displayExplore" class="dialog-picker">
+      <h4 class="dialog-picker-title" @click="displayExplore=false">
         {{ $t('design.picker.inquiryForm.select') }}
       </h4>
-      <div class="setting-sidebar-content">
-        <p class="centerLink">
+      <div class="dialog-picker-content">
+        <p class="dialog-picker-link">
           <a
             :href="getAddUrl()"
             target="_blank"
           >
-            <i class="fo-add"></i>
-            添加
+            <i class="el-icon-plus"></i>
+            {{ $t("design.picker.inquiryForm.add") }}
           </a>
         </p>
 
         <template
           v-for="(o, index) in dataset"
         >
-          <div class="editor-section-picker">
+          <div
+            :key="`collection-${index}`"
+            class="section-element">
             <el-row>
               <el-col
+                :span="21"
                 :offset="1"
-                :span="22">
-                <a
-                  href="javascript:void(0)"
-                  class="text-truncate"
-                  @click="addSection(index, o, false)"
+              >
+                <el-radio
+                  class="el-radio-full"
+                  v-model="selectedCode"
+                  :label="o.id"
+                  @change="addSection(index, o, false)"
                 >
-                  <i
-                    v-if="sectionIndex === index"
-                    class="fomille float-right fo-radio-checked">
-                  </i>
                   {{ o.title }}
-                </a>
+                </el-radio>
               </el-col>
             </el-row>
           </div>
         </template>
       </div>
-      <div v-if="displaySelected" class="setting-sidebar-bottom">
+      <div v-if="displaySelected" class="dialog-picker-bottom">
         <p class="text-right absolutely">
           <el-button
             @click="selected"
             type="primary"
             size="small">
-            {{ $t("design.selected") }}
+            {{ $t("design.imageBlock.selected") }}
           </el-button>
         </p>
       </div>
     </div>
   </div>
 </template>
-<style lang="scss" >
-  .form-name {
-    display: flex;
-    align-items: center;
-  }
-</style>
+
 <script>
 import extend from '../../../../../plugins/page/base'
+import * as http from '../../../../../plugins/api/enquiry'
 
 export default {
   name: 'inquiry-form-picker',
   extends: extend,
   data () {
     return {
-      siteId: '',
       displaySelected: false,
       displayExplore: false,
       sectionIndex: -1,
       selectedItem: {},
       entity: {
         id: '',
-        title: ''
+        title: '',
+        imageUrl: ''
       },
-      dataset: []
+      dataset: [],
+      selectedCode: ''
     }
   },
   computed: {
@@ -119,7 +115,10 @@ export default {
       type: Object,
       default: () => {
         return {
+          buttonLabel: '',
           id: '',
+          remark: '',
+          shopCode: '',
           title: ''
         }
       }
@@ -138,59 +137,64 @@ export default {
   watch: {
     displayExplore (value) {
       if (value) {
+        this.selectedCode = ''
         this.getData()
       }
     }
   },
   created () {
     this.entity = this.value
-    this.siteId = this.$route.params.siteId
   },
   methods: {
     /**
-     * 添加地址
-     */
+       * 添加地址
+       */
     getAddUrl () {
-      return `/enquiry/${this.siteId}/form`
+      return `/en/design/${this.shopCode}/enquiry/form/add`
     },
     /**
-     * 返回上一级
-     */
+       * 返回上一级
+       */
     closePicker () {
       this.$emit('close')
     },
     /**
-     * 添加 section
-     */
+       * 添加 section
+       */
     addSection (index, data) {
       this.displaySelected = true
       this.sectionIndex = index
       this.selectedItem = data
     },
     /**
-     * 清除数据
-     */
+       * 清除数据
+       */
     clearData () {
       this.entity = {
+        buttonLabel: '',
         id: '',
-        title: '',
-        image: ''
+        remark: '',
+        shopCode: '',
+        title: ''
       }
     },
     /**
-     * 获取链接数据
-     */
+       * 获取链接数据
+       */
     getData () {
       this.dataset = []
-      this.datasource.linkPicker({
-        searchType: 6,
-        q: '',
-        siteId: this.siteId
+      http.enquiryFormPaging({
+        current: 1,
+        size: 20,
+        item: {
+          title: '',
+          shopCode: this.shopCode
+        }
       })
         .then(result => {
           this.resultMessage(result, (success) => {
             if (success) {
-              this.dataset = result.data
+              this.dataset = result.data.records
             }
           })
         })
@@ -199,12 +203,15 @@ export default {
         })
     },
     /**
-     * 选择
-     */
+       * 选择
+       */
     selected () {
       if (this.selectedItem) {
         this.entity = {
+          buttonLabel: '',
           id: this.selectedItem.id,
+          remark: this.selectedItem.remark,
+          shopCode: this.selectedItem.shopCode,
           title: this.selectedItem.title
         }
         this.displayExplore = false

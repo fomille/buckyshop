@@ -162,12 +162,13 @@ export default {
           .then(result => {
             this.resultMessage(result, (success) => {
               if (success) {
-                if (row.all) {
-                  this.dataset = result.data.list
-                  // [row.all].concat(result.data.list)
-                } else {
-                  this.dataset = result.data
-                }
+                this.dataset = result.data.list
+                // if (row.all) {
+                //   // [row.all].concat(result.data.list)
+                // } else {
+                //   console.log(JSON.stringify(result.data))
+                //   this.dataset = result.data
+                // }
               }
             })
           })

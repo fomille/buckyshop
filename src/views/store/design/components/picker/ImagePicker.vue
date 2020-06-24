@@ -2,7 +2,7 @@
   <div>
     <div class="section-image-block">
       <div class="section-image-block-none" v-if="imageURL === ''">
-        <p class="text-center" @click="displayExplore=true" v-if="imageURL === ''">
+        <p class="text-center embed-responsive" @click="displayExplore=true" v-if="imageURL === ''">
           <i class="el-icon-plus"></i>
         </p>
       </div>
@@ -35,12 +35,13 @@
             :span="11">
             <el-upload
               multiple
-              action="/api2/admin/oss/simple-file-upload"
+              action="/api/admin/oss/simple-file-upload"
               :show-file-list="false"
               :limit="100"
               :accept="'image/*'"
               :headers="headers"
               :data="aliyunOSS"
+              :with-credentials="true"
               :on-success="uploadSuccess"
               :before-upload="uploadBefore">
               <div class="embed-responsive">
@@ -202,40 +203,40 @@ export default {
         })
     },
     getDefaultImage () {
-      if (this.imageList.length === 0) {
-        this.imageList = [
-          {
-            createTime: 1591709937694,
-            updateTime: 1591709937694,
-            id: 681,
-            resourceCode: '306798993460e0455e7b5336db9885e3',
-            shopCode: '086de2ed2a787a58b491e6bb95f0cf74',
-            url: 'https://upload.mybuckyshop.com/2020/06/09/CZY-MWiNKgeBZJaW3fL0Eh.jpg',
-            flag: 1,
-            resGroup: 1
-          },
-          {
-            createTime: 1591709983510,
-            updateTime: 1591709983510,
-            id: 682,
-            resourceCode: 'c3f4eb9be3bf12595ee01dd88b2292fb',
-            shopCode: '086de2ed2a787a58b491e6bb95f0cf74',
-            url: 'https://upload.mybuckyshop.com/2020/06/09/7t9UoZadKUQ9Dj-vmBD3Eh.jpg',
-            flag: 1,
-            resGroup: 1
-          },
-          {
-            createTime: 1591711324731,
-            updateTime: 1591711324731,
-            id: 683,
-            resourceCode: '57335dd6ebcd8225432909bad4017392',
-            shopCode: '086de2ed2a787a58b491e6bb95f0cf74',
-            url: 'https://upload.mybuckyshop.com/2020/06/09/F_J4FmRaaKK9mai1fMtdyM.JPG',
-            flag: 1,
-            resGroup: 1
-          }
-        ]
-      }
+      // if (this.imageList.length === 0) {
+      //   this.imageList = [
+      //     {
+      //       createTime: 1591709937694,
+      //       updateTime: 1591709937694,
+      //       id: 681,
+      //       resourceCode: '306798993460e0455e7b5336db9885e3',
+      //       shopCode: '086de2ed2a787a58b491e6bb95f0cf74',
+      //       url: 'https://upload.mybuckyshop.com/2020/06/09/CZY-MWiNKgeBZJaW3fL0Eh.jpg',
+      //       flag: 1,
+      //       resGroup: 1
+      //     },
+      //     {
+      //       createTime: 1591709983510,
+      //       updateTime: 1591709983510,
+      //       id: 682,
+      //       resourceCode: 'c3f4eb9be3bf12595ee01dd88b2292fb',
+      //       shopCode: '086de2ed2a787a58b491e6bb95f0cf74',
+      //       url: 'https://upload.mybuckyshop.com/2020/06/09/7t9UoZadKUQ9Dj-vmBD3Eh.jpg',
+      //       flag: 1,
+      //       resGroup: 1
+      //     },
+      //     {
+      //       createTime: 1591711324731,
+      //       updateTime: 1591711324731,
+      //       id: 683,
+      //       resourceCode: '57335dd6ebcd8225432909bad4017392',
+      //       shopCode: '086de2ed2a787a58b491e6bb95f0cf74',
+      //       url: 'https://upload.mybuckyshop.com/2020/06/09/F_J4FmRaaKK9mai1fMtdyM.JPG',
+      //       flag: 1,
+      //       resGroup: 1
+      //     }
+      //   ]
+      // }
     },
     /**
      * 将图片置为选择状态

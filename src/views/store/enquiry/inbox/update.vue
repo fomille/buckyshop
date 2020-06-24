@@ -242,7 +242,7 @@
           </page-block>
           <page-block>
             <div class="user-info">
-              <router-link :to="customerLink">
+<!--              <router-link :to="customerLink">-->
                 <el-avatar style="background: #46a0fc" v-if="avatar">{{
                   avatar
                 }}</el-avatar>
@@ -251,17 +251,16 @@
                   style="background: #FFCC01"
                   v-else
                 ></el-avatar>
-              </router-link>
-              <router-link class="mt-3 text-primary" :to="customerLink"
-                >{{ enquiryDetail.client.firstName }}
-                {{ enquiryDetail.client.lastName }}</router-link
-              >
-              <router-link class="mt-3 text-secondary" :to="customerLink">{{
+<!--              </router-link>-->
+              <p class="mt-3 text-primary">{{ enquiryDetail.client.firstName }}
+                {{ enquiryDetail.client.lastName }}
+              </p>
+              <p class="mt-3 text-secondary">{{
                 enquiryDetail.client.email
-              }}</router-link>
-              <router-link class="mt-3" :to="customerLink">{{
+              }}</p>
+              <p class="mt-3">{{
                 enquiryDetail.client.phone
-              }}</router-link>
+              }}</p>
               <div class="mt-3">
                 {{ $t("enquiry.inbox.update.form.quantity") }}
               </div>
@@ -504,6 +503,9 @@ export default {
     /*font-size: 14px;*/
     .count {
       font-size: 32px;
+    }
+    p {
+      margin: 0;
     }
   }
   .state-tag {

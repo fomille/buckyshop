@@ -83,5 +83,6 @@ export default {
       value: 'zh-CN'
     }
   ],
-  placeholderImage: placeholderImage
+  placeholderImage: placeholderImage,
+  sectionClipKey: 'SectionClip'
 }

@@ -35,21 +35,6 @@
               {{ $t("store.theme.previewWeb") }}
             </el-button>
           </div>
-          <!--          <div-->
-          <!--            class="mt-7">-->
-          <!--            <p-->
-          <!--              v-if="entity.changed"-->
-          <!--              class="text-warning">-->
-          <!--              <i class="el-icon-warning"></i>-->
-          <!--              {{$t('store.theme.changed.heading')}}-->
-          <!--            </p>-->
-          <!--            <el-button-->
-          <!--              @click="publishSite(true)"-->
-          <!--              class="absolutely"-->
-          <!--              type="warning">-->
-          <!--              {{$t('store.theme.changed.button')}}-->
-          <!--            </el-button>-->
-          <!--          </div>-->
         </el-col>
         <el-col
           :offset="1"
@@ -272,7 +257,7 @@ export default {
                   action: this.actionType.delete
                 }
                 this.resultMessage(result, (success) => {
-                  this.success()
+                  this.getData()
                 })
                 instance.confirmButtonLoading = false
                 done()
@@ -307,13 +292,14 @@ export default {
     publishTheme () {
       this.loading = true
       theme.templateUpdate({
-        shopTemplateCode: this.shopTemplateCode,
-        shopCode: this.shopCode
+        shopTemplateCode: this.updateModel.shopTemplateCode,
+        shopCode: this.updateModel.shopCode,
+        current: 1
       })
         .then(result => {
           this.updateVisible = false
           result.options = {
-            success: this.$t('base.publishSuccess')
+            success: this.$t('store.theme.publishSuccess')
           }
           this.resultMessage(result, (success) => {
             if (success) {

@@ -64,6 +64,13 @@
         >
           + Add Sections
         </div>
+        <div
+          v-if="dataset.page.addable === 1 && sectionPasteVisible"
+          class="section-addable no-top"
+          @click="pasteFormClipboard"
+        >
+          Paste form clipboard
+        </div>
         <div class="split">
           <label>Default</label>
         </div>
@@ -175,7 +182,7 @@
           :id="o.pageModuleCode"
           :key="o.pageModuleCode"
           :message-status="messageStatus"
-          :resource-code="o.resourceCode"
+          :resource-code="shopConfig.section[o.resourceType].resourceCode"
           :resource-type="shopConfig.section[o.resourceType].resourceType"
           :shop-code="shopCode"
           :template-code="dataset.templateCode"
@@ -183,6 +190,8 @@
           @close="closeSettingPanel"
           @message="updateSettings"
           @remove="removeSection"
+          @copy="copySection"
+          @copyToClip="copyToClip"
         >
         </section-setting>
       </template>
@@ -195,6 +204,7 @@
           :key="`setting-theme-${index}`"
           :message-status="messageStatus"
           :shop-code="shopCode"
+          :resource-type="index"
           :template-code="dataset.templateCode"
           :schema="o"
           v-model="dataset.config.data.current[index].data"
@@ -270,6 +280,7 @@ export default {
       targetOrigin: '',
       newSectionVisible: false,
       collectionCode: '',
+      spuCode: '',
       /**
        * section 临时ID
        */
@@ -325,6 +336,75 @@ export default {
   },
   methods: {
     /**
+     * 从剪贴板中粘贴
+     */
+    pasteFormClipboard () {
+      let sectionCache = localStorage.getItem(this.global.sectionClipKey)
+      if (sectionCache) {
+        sectionCache = JSON.parse(sectionCache)
+        const schema = this.shopConfig.section[sectionCache.resourceType]
+        if (schema) {
+          console.log('pasteFormClipboard', schema)
+          sectionCache.pageModuleCode = `design-preview-${new Date().getTime()}`
+          sectionCache.pageCode = this.dataset.page.pageCode
+          this.copySection(sectionCache, 1)
+        }
+      }
+    },
+    /**
+     * copy section
+     * @param data
+     * @param closePanel 关闭参数面板
+     */
+    copySection (data, closePanel) {
+      this.sendMessage({
+        action: 'addSection',
+        data: {
+          official: true,
+          pageModuleCode: data.pageModuleCode,
+          resourceType: data.resourceType,
+          resourceCode: data.resourceCode,
+          shopCode: data.shopCode,
+          templateCode: data.templateCode,
+          pageCode: this.dataset.page.pageCode,
+          data: data.data,
+          visible: true
+        }
+      })
+      const model = {
+        data: data.data,
+        hidden: 0,
+        pageCode: this.dataset.page.pageCode,
+        pageModuleCode: data.pageModuleCode,
+        pageType: this.dataset.page.pageType,
+        resourceCode: data.resourceCode,
+        resourceType: data.resourceType,
+        sort: this.dataset.page.modules.length + 1
+      }
+      const m = this.dataset.page.modules.filter((o) => {
+        return o.pageModuleCode === model.pageModuleCode
+      })
+      if (m.length === 0) {
+        this.dataset.page.modules.push(JSON.parse(JSON.stringify(model)))
+      }
+      this.tabSlide()
+      this.newSectionVisible = false
+    },
+    /**
+     * 复制到剪贴版
+     */
+    copyToClip (data) {
+      const schema = this.shopConfig.section[data.resourceType]
+      if (schema) {
+        localStorage.setItem(this.global.sectionClipKey, JSON.stringify(data))
+        this.sectionPasteVisible = true
+        this.$message({
+          type: 'success',
+          message: this.$t('design.copySucceeded')
+        })
+      }
+    },
+    /**
      * 设置项切换
      */
     tabSlide () {
@@ -368,44 +448,22 @@ export default {
      */
     addSection (sectionType, official) {
       if (this.shopConfig.section[sectionType]) {
-        // console.log('addSection', sectionType)
-        const code = `design-preview${new Date().getTime()}`
+        // console.log('addSection', JSON.stringify(this.shopConfig.section[sectionType]))
+        const code = `design-preview-${new Date().getTime()}`
         this.sendMessage({
           action: 'addSection',
           data: {
-            id: code,
             official: official,
-            moduleType: sectionType,
-            settings: this.shopConfig.section[sectionType].data,
-            template: this.shopConfig.section[sectionType].artTemplate,
+            pageModuleCode: code,
+            resourceType: sectionType,
+            resourceCode: this.shopConfig.section[sectionType].resourceCode,
+            shopCode: this.dataset.page.shopCode,
+            templateCode: this.dataset.page.templateCode,
+            pageCode: this.dataset.page.pageCode,
+            data: this.shopConfig.section[sectionType].data,
             visible: true
           }
         })
-
-        // this.getId(official, (id) => {
-        //   // console.log(JSON.stringify({
-        //   //   action: 'addSection',
-        //   //   data: {
-        //   //     id: id,
-        //   //     official: official,
-        //   //     moduleType: sectionType,
-        //   //     settings: this.shopConfig.section[sectionType].settings,
-        //   //     template: this.shopConfig.section[sectionType].frontTemplate,
-        //   //     visible: true
-        //   //   }
-        //   // }))
-        //   this.sendMessage({
-        //     action: 'addSection',
-        //     data: {
-        //       id: id,
-        //       official: official,
-        //       moduleType: sectionType,
-        //       settings: this.shopConfig.section[sectionType].settings,
-        //       template: this.shopConfig.section[sectionType].frontTemplate,
-        //       visible: true
-        //     }
-        //   })
-        // })
       }
     },
     /**
@@ -467,13 +525,14 @@ export default {
      */
     sendMessage (data) {
       if (data.action && data.action === 'update') {
-        data.data.collectionCode = this.collectionCode
+        data.data.collectionCode = this.collectionCode || ''
+        data.data.spuCode = this.spuCode || ''
         data.data.pageCode = this.dataset.page.pageCode
         data.data.dynamic = true
       }
       const editor = this.getEditor()
       if (editor) {
-        console.log('send', data)
+        // console.log('send', data)
         editor.postMessage(data, this.targetOrigin)
       }
     },
@@ -493,6 +552,7 @@ export default {
      */
     clientCallMessage (e) {
       if (e.data.design) {
+        // console.log('call', JSON.stringify(e.data.message))
         this.messageStatus = e.data.message
         switch (e.data.message.action) {
           case 'addSection':
@@ -503,11 +563,9 @@ export default {
             break
           case 'design':
             this.collectionCode = e.data.message.collectionCode
+            this.spuCode = e.data.message.spuCode
             this.initPanel()
             this.$emit('design', e.data.message)
-            break
-          case 'screenShot':
-            this.saveScreenShot(e.data.message.data)
             break
         }
       }
@@ -522,7 +580,7 @@ export default {
         action: 'update',
         data: {
           resourceType: 'colors',
-          settings: this.dataset.config.data.current.Colors.data,
+          data: this.dataset.config.data.current.Colors.data,
           shopCode: this.dataset.page.shopCode,
           templateCode: this.dataset.page.templateCode
         }
@@ -531,7 +589,7 @@ export default {
         action: 'update',
         data: {
           resourceType: 'typography',
-          settings: this.dataset.config.data.current.Typography.data,
+          data: this.dataset.config.data.current.Typography.data,
           shopCode: this.dataset.page.shopCode,
           templateCode: this.dataset.page.templateCode
         }
@@ -541,26 +599,12 @@ export default {
           action: 'update',
           data: {
             resourceType: 'general',
-            settings: this.dataset.config.data.current.General.data,
+            data: this.dataset.config.data.current.General.data,
             shopCode: this.dataset.page.shopCode,
             templateCode: this.dataset.page.templateCode
           }
         })
       }
-    },
-    /**
-     * 更新截图
-     */
-    saveScreenShot (data) {
-      // this.datasource.screenShot(data)
-      //   .then(result => {
-      //     this.$emit('updateSnapshot')
-      //     if (result.success) {
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.log('save screenshot', error)
-      //   })
     },
     /**
      * 删除Section [客户端删除成功回调执行]
@@ -587,9 +631,8 @@ export default {
      * @param sectionIndex
      */
     openSettingPanel (id, sectionIndex) {
-      console.log(id, sectionIndex)
       this.editSectionCode = id
-      this.$emit('editing', true)
+      this.$emit('editing', id !== '')
     },
     /**
      * 正式添加section [客户端添加功能回调]
@@ -598,23 +641,21 @@ export default {
       const sectionSchema = this.shopConfig.section[result.resourceType]
       if (result.official && sectionSchema) {
         const data = {
-          id: result.id,
-          moduleId: sectionSchema.id,
+          data: sectionSchema.data,
+          hidden: 0,
+          pageCode: this.dataset.page.pageCode,
+          pageModuleCode: result.pageModuleCode,
+          pageType: this.dataset.page.pageType,
+          resourceCode: sectionSchema.resourceCode,
           resourceType: result.resourceType,
-          pageId: this.dataset.page.id,
-          frontTemplate: sectionSchema.frontTemplate,
-          settings: sectionSchema.settings,
-          dynamic: sectionSchema.dynamic,
-          visible: true
+          sort: this.dataset.page.modules.length + 1
         }
-        if (!sectionSchema.settings.sectionAlias) {
-          sectionSchema.settings.sectionAlias = ''
-        }
-        const m = this.dataset.page.moduleList.filter((o) => {
-          return o.id === data.id
+        // console.log('add', JSON.stringify(data))
+        const m = this.dataset.page.modules.filter((o) => {
+          return o.pageModuleCode === data.pageModuleCode
         })
         if (m.length === 0) {
-          this.dataset.page.moduleList.push(JSON.parse(JSON.stringify(data)))
+          this.dataset.page.modules.push(JSON.parse(JSON.stringify(data)))
         }
         if (result.official && result.resourceType === 'anchorPin') {
           this.anchorNavigation()
@@ -628,10 +669,10 @@ export default {
     anchorNavigation () {
       const pins = []
       let sectionIndex = -1
-      this.dataset.page.moduleList.forEach((o, index) => {
+      this.dataset.page.modules.forEach((o, index) => {
         if (o.resourceType === 'anchorPin') {
           pins.push({
-            id: o.id,
+            id: o.pageModuleCode,
             title: o.settings.title
           })
         }
@@ -640,18 +681,18 @@ export default {
         }
       })
       if (sectionIndex > -1) {
-        this.dataset.page.moduleList[sectionIndex].settings.dataset.menus.data = pins
-        const sectionType = 'anchorNavigation'
+        this.dataset.page.modules[sectionIndex].data.dataset.menus.data = pins
         this.sendMessage({
           action: 'update',
           data: {
-            resourceType: 'anchorNavigation',
-            siteId: this.dataset.siteId,
-            templateId: this.dataset.page.moduleList[sectionIndex].templateId,
-            frontTemplate: this.shopConfig.section[sectionType].frontTemplate,
-            dynamic: false,
-            settings: this.dataset.page.moduleList[sectionIndex].settings,
-            id: this.dataset.page.moduleList[sectionIndex].id
+            data: this.dataset.page.modules[sectionIndex].data,
+            hidden: 0,
+            pageCode: this.dataset.page.pageCode,
+            pageModuleCode: this.dataset.page.modules[sectionIndex].pageModuleCode,
+            pageType: this.dataset.page.pageType,
+            resourceCode: this.dataset.page.modules[sectionIndex].resourceCode,
+            resourceType: this.dataset.page.modules[sectionIndex].resourceType,
+            sort: this.dataset.page.modules.length + 1
           }
         })
       }

@@ -179,7 +179,7 @@ import VideoPicker from './picker/VideoPicker'
 import richText from '../../../../assets/image/rich-text.jpg'
 import PositiveInteger from './picker/PositiveInteger'
 import LinkPicker from './picker/LinkPicker'
-// import RichTextEditor from '../../../../components/richText'
+import InquiryFormPicker from './picker/InquiryFormPicker'
 
 export default {
   name: 'section-widget',
@@ -188,8 +188,8 @@ export default {
     VideoPicker,
     ImagePicker,
     ProductCollectionPicker,
-    LinkPicker
-    // RichTextEditor
+    LinkPicker,
+    InquiryFormPicker
   },
   data () {
     return {

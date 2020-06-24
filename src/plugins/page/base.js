@@ -2,6 +2,7 @@
  * 页面基类
  */
 import passport from '../passport'
+import router from '../../router'
 
 export default {
   data () {
@@ -110,17 +111,17 @@ export default {
      * @param func 回调方法
      */
     resultMessage (result, func) {
-      if (result.code === 13010000) {
-        this.$message({
-          type: 'error',
-          message: this.$t('errorCode.timeOut')
-        })
-        this.$router.push({
-          path: '/passport',
-          query: {
-            redirect: location.href
-          }
-        })
+      if (result.code === -1) {
+        if (process.env.NODE_ENV === 'development') {
+          router.replace({
+            path: '/en/passport',
+            query: {
+              redirect: router.currentRoute.fullPath
+            }
+          })
+        } else {
+          this.utility.login()
+        }
         return false
       }
 

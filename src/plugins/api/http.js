@@ -18,8 +18,9 @@ http.interceptors.request.use(
   config => {
     config.headers.timestamp = new Date().getTime()
     config.headers.shopCode = localStorage.getItem('shopCode') || ''
-
-    // config.headers['Access-Control-Allow-Credentials'] = true
+    if (process.env.NODE_ENV === 'development') {
+      config.headers.common.Authorization = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsidGhlbWUubWFya2V0QGJ1Y2t5c2hvcC5jb20iLCJzdGFyaXQtYnVja3lkcm9wIiwiMTU5Mjg4MTA0NzQ0NyIsIjE1OTI4ODEwNDc0NDciXX0.e4vXh3cQ2z1VMfWGGX-0FKzCIraSvPy5qrRNrdnKaJM'
+    }
     return config
   },
   error => {
@@ -32,14 +33,18 @@ http.interceptors.request.use(
  */
 http.interceptors.response.use(
   response => {
-    if (response.data.code === -1) {
+    if (response.code === -1) {
       passport.logout()
-      router.replace({
-        path: '/en/passport',
-        query: {
-          redirect: router.currentRoute.fullPath
-        }
-      })
+      if (process.env.NODE_ENV === 'development') {
+        router.replace({
+          path: '/en/passport',
+          query: {
+            redirect: router.currentRoute.fullPath
+          }
+        })
+      } else {
+        this.utility.login()
+      }
     }
     return response.data
   },

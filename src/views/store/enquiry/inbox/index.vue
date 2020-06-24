@@ -345,8 +345,8 @@ export default {
       } = this.filterParams
 
       const params = {
-        current: this.dataTable.tableOptions.pageIndex,
-        size: this.dataTable.tableOptions.pageSize,
+        current: this.dataTable.pagingOptions.pageIndex,
+        size: this.dataTable.pagingOptions.pageSize,
         orderBy,
         item: {
           shopCode: this.shopCode,
@@ -356,7 +356,6 @@ export default {
           searchType
         }
       }
-
       if (dateRange) {
         params.params.createTimeStart = dateRange[0]
         params.params.createTimeLimit = dateRange[1]
@@ -384,7 +383,7 @@ export default {
      * 修改跳转
      */
     updateEnquiry (row) {
-      this.$router.push(`/en/${this.shopCode}/enquiry/inbox/update/${row.id}`)
+      this.$router.push(`/${this.shopCode}/enquiry/inbox/update/${row.id}`)
     }
   }
 }

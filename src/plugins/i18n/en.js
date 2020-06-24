@@ -57,8 +57,7 @@ export default {
     orderBy: 'Order by',
     keyword: 'Please input keywords',
     inputPlaceholder: '请输入内容',
-    selectPlaceholder: '请选择',
-    opps: 'OPPS',
+    selectPlaceholder: 'Please select',
     date: {
       placeholder: 'Please select a time',
       start: 'Start time',
@@ -557,16 +556,12 @@ export default {
   store: {
     theme: {
       pageTitle: 'Themes',
-      customize: '编辑',
       editWeb: 'Design',
       previewWeb: 'Preview',
       getFreeThemes: 'Add theme',
       freeTheme: 'Free theme',
       setDefaultTheme: 'Set as default theme',
-      changed: {
-        heading: '当前主题内容已发生变更，请重新发布',
-        button: '立即发布'
-      },
+      publishSuccess: 'Set successfully',
       current: {
         heading: 'Current theme',
         subheading: 'This is the theme customers see when they visit your store.'
@@ -656,9 +651,9 @@ export default {
         add: 'Create Collection'
       },
       inquiryForm: {
-        edit: '编辑表单',
-        select: '选择表单',
-        add: '添加表单'
+        edit: 'Edit InquiryForm',
+        select: 'Inquiry Form',
+        add: 'Create Inquiry Form'
       }
     },
     productCollectionPicker: {
@@ -701,6 +696,7 @@ export default {
       icon: 'fo-add',
       type: 'addition',
       removable: false,
+      sectionAlias: '',
       name: {
         en: 'Add section',
         'zh-CN': '添加模块'

@@ -1253,10 +1253,12 @@ header {
     text-align: center;
     color: #1890FF;
     font-size: 12px;
-    line-height: 50px;
+    padding: 20px 0;
     cursor: pointer; }
     .design-section-panel .section-addable + .split {
       margin-top: 0 !important; }
+    .design-section-panel .section-addable.no-top {
+      padding-top: 0; }
 
 /**
 网页预览区
@@ -1477,8 +1479,6 @@ header {
     bottom: 0;
     height: calc(100% - 57px);
     width: 210px;
-    padding-left: 15px;
-    padding-right: 15px;
     overflow-x: hidden;
     overflow-y: auto; }
     .design-settings .editor-section-content.active {
@@ -1499,6 +1499,8 @@ header {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: bold;
+  padding-right: 15px;
+  padding-left: 15px;
   cursor: pointer;
   border-bottom: 1px solid #f2f2f2; }
   .setting-element:not(.only-one):before {
@@ -1515,7 +1517,9 @@ header {
 元素
  */
 .setting-widget {
-  margin-top: 10px; }
+  margin-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px; }
   .setting-widget p {
     margin: 5px 0;
     color: #999;
@@ -1540,7 +1544,6 @@ header {
  */
 .section-image-block .section-image-block-none,
 .section-image-block .section-image-block-img {
-  height: 220px;
   background-color: #f4f6f8;
   justify-content: center;
   border: 1px solid #dddfe5;
@@ -1551,7 +1554,6 @@ header {
 .section-image-block .section-image-block-none {
   cursor: pointer; }
   .section-image-block .section-image-block-none p {
-    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center; }
@@ -1859,15 +1861,13 @@ header {
       width: 100%; }
     .editor-content .editor-content-title.active:before {
       transform: rotate(90deg); }
-  .editor-content .editor-content-element {
-    padding-left: 8px; }
-    .editor-content .editor-content-element .editor-sub-title {
-      color: #ababab;
-      font-weight: bold;
-      padding: 0 15px; }
+  .editor-content .editor-content-element .editor-sub-title {
+    color: #ababab;
+    font-weight: bold;
+    padding: 0 15px; }
 
 .editor-section-bottom {
-  padding: 15px 0; }
+  padding: 15px; }
   .editor-section-bottom .el-button {
     border: 0;
     margin-left: 0; }

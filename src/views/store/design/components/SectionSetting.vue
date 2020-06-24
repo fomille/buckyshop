@@ -435,14 +435,14 @@ export default {
      * 复制模块
      */
     copySection () {
+      const code = `design-preview-${new Date().getTime()}`
       this.$emit('copy', {
-        resourceType: this.schema.type,
-        shopCode: this.shopCode,
+        pageModuleCode: code,
+        resourceCode: this.resourceCode,
         templateCode: this.templateCode,
-        frontTemplate: this.schema.frontTemplate || '',
-        dynamic: this.schema.dynamic,
-        settings: this.model,
-        id: `pre${new Date().getTime()}`,
+        resourceType: this.resourceType,
+        shopCode: this.shopCode,
+        data: this.model,
         visible: true
       })
     },
@@ -450,13 +450,14 @@ export default {
      * 复制到剪贴版
      */
     copyToClip () {
+      const code = `design-preview-${new Date().getTime()}`
       this.$emit('copyToClip', {
+        pageModuleCode: code,
+        resourceCode: this.resourceCode,
         templateCode: this.templateCode,
-        resourceType: this.schema.type,
+        resourceType: this.resourceType,
         shopCode: this.shopCode,
         data: this.model,
-        pageModuleCode: this.id,
-        id: `pre${new Date().getTime()}`,
         visible: true
       })
     },
@@ -469,11 +470,11 @@ export default {
         this.$emit('message', {
           action: 'update',
           data: {
+            pageModuleCode: this.id,
             resourceCode: this.resourceCode,
             templateCode: this.templateCode,
-            resourceType: this.schema.type,
+            resourceType: this.resourceType,
             shopCode: this.shopCode,
-            pageModuleCode: this.id,
             data: this.model
           }
         })
@@ -515,6 +516,7 @@ export default {
     },
     /**
      * remove slide
+     * @param o
      * @param index
      */
     removeSlide (o, index) {

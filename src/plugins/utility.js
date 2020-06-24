@@ -147,6 +147,12 @@ export default {
     return location.origin
   },
   /**
+   * 登录跳专
+   */
+  login () {
+    location.href = `${this.locationOrigin()}/en/login/?ref=${encodeURIComponent(location.href)}`
+  },
+  /**
    * 首字大写
    * @param value
    * @returns {string}
