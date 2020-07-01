@@ -417,7 +417,7 @@ export default {
        * 预览网站
        */
     previewSite (data) {
-      this.utility.openSite(data.previewDomain)
+      this.utility.openSite(data.domain)
     }
   }
 }

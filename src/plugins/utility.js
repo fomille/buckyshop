@@ -121,6 +121,25 @@ export default {
       .replace(/height="[^"]*"/g, '')
   },
   /**
+   * element animated
+   * @param selector
+   * @param animationName
+   * @param callback
+   */
+  animateCSS (selector, animationName, callback) {
+    const node = document.querySelector(selector)
+    console.log(node)
+    node.classList.add('animated', 'ultra-fast', animationName)
+    function handleAnimationEnd () {
+      node.classList.remove('animated', 'ultra-fast', animationName)
+      node.removeEventListener('animationend', handleAnimationEnd)
+      if (callback && typeof callback === 'function') {
+        callback.call(this)
+      }
+    }
+    node.addEventListener('animationend', handleAnimationEnd)
+  },
+  /**
    * 删除空格
    * @param value
    * @returns {*}

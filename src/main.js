@@ -16,6 +16,7 @@ import http from './plugins/api/http'
 import vueLodash from 'lodash'
 import global from './plugins/data'
 import Tinymce from './components/tinymce-editor'
+import 'animate.css'
 
 Vue.use(elementUI)
 Vue.config.productionTip = false

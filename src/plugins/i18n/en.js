@@ -647,13 +647,13 @@ export default {
     picker: {
       productCollection: {
         edit: 'Edit Collection',
-        select: 'Product Collection',
-        add: 'Create Collection'
+        select: 'Select a collection',
+        add: 'Add a collection'
       },
       inquiryForm: {
         edit: 'Edit InquiryForm',
-        select: 'Inquiry Form',
-        add: 'Create Inquiry Form'
+        select: 'Select a form',
+        add: 'Add a form'
       }
     },
     productCollectionPicker: {

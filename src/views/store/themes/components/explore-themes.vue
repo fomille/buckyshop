@@ -181,7 +181,7 @@ export default {
         current: 1,
         size: 100,
         item: {
-          type: 0
+          type: 1
         }
       }
       if (this.tagCode) {

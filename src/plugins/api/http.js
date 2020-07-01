@@ -1,9 +1,9 @@
 'use strict'
 import http from 'axios'
-import router from '../../router'
 import passport from '../passport'
 import i18n from '../../plugins/i18n/base'
 import { Message } from 'element-ui'
+import router from '../../router'
 
 http.defaults.headers.post['Content-Type'] = 'application/json'
 http.defaults.timeout = 1000 * 60
@@ -19,7 +19,7 @@ http.interceptors.request.use(
     config.headers.timestamp = new Date().getTime()
     config.headers.shopCode = localStorage.getItem('shopCode') || ''
     if (process.env.NODE_ENV === 'development') {
-      config.headers.common.Authorization = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsidGhlbWUubWFya2V0QGJ1Y2t5c2hvcC5jb20iLCJzdGFyaXQtYnVja3lkcm9wIiwiMTU5Mjg4MTA0NzQ0NyIsIjE1OTI4ODEwNDc0NDciXX0.e4vXh3cQ2z1VMfWGGX-0FKzCIraSvPy5qrRNrdnKaJM'
+      config.headers.common.Authorization = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsiMTI1NjA4MzYwMkBxcS5jb20iLCJzdGFyaXQtYnVja3lkcm9wIiwiMTU5MzU4Mjg0NDIzMiIsIjE1OTM1ODI4NDQyMzIiXX0.G0s4fRKNyg2CgjqeFiKaE9ydu8GHPenP-BFXDupjxMo'
     }
     return config
   },

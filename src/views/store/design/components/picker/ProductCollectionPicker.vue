@@ -2,10 +2,10 @@
   <div>
     <div class="collection-picker">
       <h6>
-        <router-link target="_blank" class="float-right" :to="getAddUrl()">
-          {{ $t('design.picker.productCollection.edit') }}
-          <i class="fo-export"></i>
-        </router-link>
+        <label class="collection-picker-tips" @click="getAddUrl()">
+          <i class="el-icon-plus"></i>
+          {{ $t('design.picker.productCollection.add') }}
+        </label>
         {{ name[language] }}
       </h6>
       <div class="collection-picker-none"
@@ -38,8 +38,8 @@
       <div class="dialog-picker-content">
         <p class="dialog-picker-link">
           <a
-            :href="getAddUrl()"
-            target="_blank"
+            href="javascript:void(0)"
+            @click="getAddUrl()"
           >
             <i class="el-icon-plus"></i>
             {{ $t("design.picker.productCollection.add") }}
@@ -150,7 +150,7 @@ export default {
      * 添加地址
      */
     getAddUrl () {
-      return `/en/shop/${this.shopCode}/collections/add`
+      this.utility.openSite(`/en/shop/${this.shopCode}/collections/add`)
     },
     /**
      * 返回上一级

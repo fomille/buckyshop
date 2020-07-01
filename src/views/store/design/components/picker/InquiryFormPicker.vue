@@ -2,17 +2,17 @@
   <div>
     <div class="collection-picker">
       <h6>
-        <router-link target="_blank" class="float-right" :to="getAddUrl()">
+        <label class="collection-picker-tips" @click="getAddUrl()">
+          <i class="el-icon-plus"></i>
           {{ $t('design.picker.inquiryForm.add') }}
-          <i class="fo-export"></i>
-        </router-link>
+        </label>
         {{ name[language] }}
       </h6>
       <div class="collection-picker-none"
            @click="displayExplore=true"
            v-if="!entity.id">
         <p class="text-center">
-          <i class="el-icon-plus"></i>
+          <i class="el-icon-edit"></i>
           {{ $t('design.picker.inquiryForm.select') }}
         </p>
       </div>
@@ -22,7 +22,7 @@
         </p>
       </div>
       <el-button-group v-if="entity.id">
-        <el-button @click="displayExplore=true">
+        <el-button @click.native="displayExplore=true">
           <i class="el-icon-edit"></i>
         </el-button>
         <el-button @click="clearData">
@@ -37,8 +37,8 @@
       <div class="dialog-picker-content">
         <p class="dialog-picker-link">
           <a
-            :href="getAddUrl()"
-            target="_blank"
+            href="javascript:void(0)"
+            @click="getAddUrl()"
           >
             <i class="el-icon-plus"></i>
             {{ $t("design.picker.inquiryForm.add") }}
@@ -150,7 +150,7 @@ export default {
        * 添加地址
        */
     getAddUrl () {
-      return `/en/design/${this.shopCode}/enquiry/form/add`
+      this.utility.openSite(`/en/shop/${this.shopCode}/enquiry/form/add`)
     },
     /**
        * 返回上一级

@@ -361,6 +361,7 @@ $colorHeading: #24292e;
     display: flex;
     height: calc(100% - 58px);
     overflow: hidden;
+    transition: $transition;
 
     /**
     页面区域
@@ -540,16 +541,20 @@ $colorHeading: #24292e;
 .design-settings {
   width: 240px;
   height: calc(100% - 56px);
-  right: 0;
+  right: -240px;
   top: 56px;
   position: fixed;
   overflow-x: hidden;
   overflow-y: auto;
   background-color: #fff;
   z-index: 18;
+  transition: all 0.4s;
 
-  &:not(.active) {
-    display: none;
+  //&:not(.active) {
+  //  display: none;
+  //}
+  &.active {
+    right: 0;
   }
 
   .editor-section-title {
@@ -614,7 +619,7 @@ $colorHeading: #24292e;
   &:not(.only-one) {
     &:before {
       font-family: "buckyShopIcon" !important;
-      content: "\e63c";
+      content: "\e645";
       font-size: 8px!important;
       margin-right: 20px;
       width: 10px;
@@ -622,7 +627,7 @@ $colorHeading: #24292e;
     }
     &.active {
       &:before {
-        content: '\e645';
+        content: '\e63c';
       }
     }
   }
@@ -853,10 +858,19 @@ $colorHeading: #24292e;
     color: $color-gray;
     font-size: 12px;
     overflow: hidden;
+  }
+  .collection-picker-tips {
+    font-size: 10px;
+    float: right;
+    cursor: pointer;
+    color: $colorPrimary;
+    display: flex;
+    align-items: center;
 
     i {
       vertical-align: bottom;
-      font-size: 14px;
+      font-size: 10px;
+      margin-right: 5px;
     }
   }
 
@@ -1095,6 +1109,7 @@ $colorHeading: #24292e;
       border-left: 6px solid #dddfe5;
       border-bottom: 6px solid rgba(255, 255, 255, 0);
       z-index: 3;
+      transform: rotate(90deg);
     }
 
     &:hover {
@@ -1105,7 +1120,7 @@ $colorHeading: #24292e;
 
     &.active {
       &:before {
-        transform: rotate(90deg);
+        transform: rotate(-90deg);
       }
     }
   }
@@ -1135,6 +1150,8 @@ $colorHeading: #24292e;
   .el-button {
     border: 0;
     margin-left: 0;
+    padding: 8px;
+    font-size: 10px;
   }
   .el-button + .el-button {
     margin-right: 10px;
@@ -1184,4 +1201,7 @@ $colorHeading: #24292e;
       width: 100%;
     }
   }
+}
+.page-loading-full-screen {
+  background-color: rgba(255, 255, 255, .8) !important;
 }

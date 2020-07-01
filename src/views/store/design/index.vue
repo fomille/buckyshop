@@ -29,6 +29,7 @@
             <el-col :span="8">
               <el-dropdown
                 placement="top-start"
+                trigger="click"
                 @command="changePage">
                 <label class="el-dropdown-link">
                   {{ pageData.title }}
@@ -83,7 +84,7 @@
         <div :class="`design-website-container ${editSectionStatus}`">
           <div class="design-website-content">
             <div class="design-website-wrapper">
-              <iframe class="design-website-iframe" :src="`https:${pageURL}`" id="editor"></iframe>
+              <iframe class="design-website-iframe" :src="pageURL" id="editor"></iframe>
             </div>
           </div>
         </div>
@@ -105,7 +106,7 @@ export default {
   extends: extend,
   data () {
     return {
-      pageURL: 'https://1209760082859032577-1254724793669640193.design.fomille.com/index.html',
+      pageURL: '',
       pages: {
         customPages: [],
         systemPages: []
@@ -192,7 +193,6 @@ export default {
     }
   },
   created () {
-    this.pageValid()
     this.unsaved = true
     this.getData()
   },

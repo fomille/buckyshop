@@ -134,7 +134,7 @@
     >
     </section-picker>
 
-    <div :class="`design-settings ${editSectionCode === '' ? '' : 'active'}`">
+    <div :class="`design-settings animated ${editSectionCode === '' ? '' : 'active'}`">
       <!-- header -->
       <template
         v-if="dataset.page.includeHeader && shopConfig.section.header && editSectionCode === dataset.common.header.resourceCode"
@@ -576,6 +576,7 @@ export default {
     initPanel () {
       this.displaySection = true
       this.tabSlide()
+      this.closeSection()
       this.sendMessage({
         action: 'update',
         data: {
@@ -712,7 +713,7 @@ export default {
       })
     },
     setOrigin () {
-      this.targetOrigin = 'https:' + this.dataset.page.url
+      this.targetOrigin = this.dataset.page.url
     }
   }
 }
