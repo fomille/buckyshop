@@ -19,7 +19,7 @@ http.interceptors.request.use(
     config.headers.timestamp = new Date().getTime()
     config.headers.shopCode = localStorage.getItem('shopCode') || ''
     if (process.env.NODE_ENV === 'development') {
-      config.headers.common.Authorization = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsiMTI1NjA4MzYwMkBxcS5jb20iLCJzdGFyaXQtYnVja3lkcm9wIiwiMTU5MzU4Mjg0NDIzMiIsIjE1OTM1ODI4NDQyMzIiXX0.G0s4fRKNyg2CgjqeFiKaE9ydu8GHPenP-BFXDupjxMo'
+      config.headers.common.Authorization = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsiMTI1NjA4MzYwMkBxcS5jb20iLCJzdGFyaXQtYnVja3lkcm9wIiwiMTU5MzkzNDk4MzM3NyIsIjE1OTM5MzQ5ODMzNzciXX0.GYbGWFa1ml6boeFD0bj_aqXBsGwgzIywmePPf1gKWBA'
     }
     return config
   },

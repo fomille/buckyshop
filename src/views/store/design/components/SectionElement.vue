@@ -25,7 +25,9 @@
         <template v-if="schema.global">
           {{schema.name[language]}}
         </template>
-        <template v-else>{{model.data.sectionAlias || schema.name[language]}}</template>
+        <template v-else>
+          {{model.data.sectionAlias || schema.name[language]}}
+        </template>
       </el-col>
       <el-col
         :span="3"

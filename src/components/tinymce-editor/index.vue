@@ -69,9 +69,9 @@ export default {
   data () {
     return {
       init: {
-        language_url: '/tinymce/langs/zh_CN.js',
+        language_url: `${process.env.VUE_APP_PublicDir}tinymce/langs/zh_CN.js`,
         language: 'uk',
-        skin_url: '/tinymce/skins/ui/oxide',
+        skin_url: `${process.env.VUE_APP_PublicDir}tinymce/skins/ui/oxide`,
         height: 400,
         plugins: plugins,
         toolbar: this.modelType === 'full' ? fullToolbar : simpleToolbar,
@@ -85,8 +85,10 @@ export default {
         block_formats: 'Paragraph=p; Heading 2=h2; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6; Preformatted=pre',
         images_upload_handler: (blobInfo, success, failure) => {
           const formData = new FormData()
-          formData.append('rename', true)
+          formData.append('isRename', true)
+          formData.append('ossKey', 'us-buckyshop')
           formData.append('file', blobInfo.blob())
+          formData.append('fileName', blobInfo.filename())
           http.upload(formData).then(res => {
             if (res.success) {
               success(res.data.cdnUrl)

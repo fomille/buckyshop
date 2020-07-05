@@ -298,11 +298,13 @@ export default {
   props: {
     value: {
       type: Object,
-      default: () => {}
+      default: () => {
+      }
     },
     shopConfig: {
       type: Object,
-      default: () => {}
+      default: () => {
+      }
     },
     /**
      * 是否更新首页截屏
@@ -348,6 +350,8 @@ export default {
           sectionCache.pageModuleCode = `design-preview-${new Date().getTime()}`
           sectionCache.pageCode = this.dataset.page.pageCode
           this.copySection(sectionCache, 1)
+          localStorage.removeItem(this.global.sectionClipKey)
+          this.sectionPasteVisible = false
         }
       }
     },
@@ -416,7 +420,7 @@ export default {
      */
     closeSection () {
       this.newSectionVisible = false
-      this.removeSection('', '', false)
+      // this.removeSection('', '', false)
     },
     /**
      * 关闭设置面板
@@ -704,11 +708,22 @@ export default {
      * @param official
      */
     removeSection (id, official) {
-      this.sendMessage({
-        action: 'removeSection',
-        data: {
-          official: official,
-          id: id
+      this.$confirm(this.$t('design.removeSection'), this.$t('base.oops'), {
+        confirmButtonText: this.$t('base.confirm'),
+        cancelButtonText: this.$t('base.cancel'),
+        type: 'error',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            this.sendMessage({
+              action: 'removeSection',
+              data: {
+                official: official,
+                id: id
+              }
+            })
+          }
+          instance.confirmButtonLoading = false
+          done()
         }
       })
     },

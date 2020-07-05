@@ -28,7 +28,7 @@
             {{ o.name[language] }}
           </h4>
           <div
-            :class="`d-none${0 === index ? ' active' : ''}`"
+            :class="`settings-content-block d-none${0 === index ? ' active' : ''}`"
             :data-params-block="index"
             :key="`params-block-${index}`"
           >
@@ -337,10 +337,10 @@ export default {
     }
   },
   mounted () {
-    const el = document.querySelector('.setting-element')
-    if (el) {
-      el.classList.remove('active')
-    }
+    // const el = document.querySelector('.setting-element')
+    // if (el) {
+    //   el.classList.remove('active')
+    // }
   },
   created () {
     // if (typeof (this.value.settings) === 'string') {

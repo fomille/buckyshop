@@ -55,9 +55,18 @@
                     divided
                     key="fo-add-custom-page"
                     command="fo-add-custom-page"
+                    class="text-primary"
                   >
                     <i class="el-icon-plus"></i>
                     {{ $t('design.addPage')}}
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    key="fo-manage-custom-page"
+                    command="fo-manage-custom-page"
+                    class="text-primary"
+                  >
+                    <i class="el-icon-edit-outline"></i>
+                    {{ $t('design.managePage')}}
                   </el-dropdown-item>
                 </el-dropdown-menu>
 
@@ -90,18 +99,23 @@
         </div>
       </div>
     </div>
+    <add-page
+      @close="addPageFun"
+      :visible="addPageVisible"></add-page>
   </page-loading>
 </template>
 
 <script>
 import extend from '../../../plugins/page/unsaved'
 import toolBar from './components/toolBar'
+import addPage from './components/AddPage'
 import * as http from '../../../plugins/api/theme'
 
 export default {
   name: 'design',
   components: {
-    toolBar
+    toolBar,
+    addPage
   },
   extends: extend,
   data () {
@@ -189,7 +203,8 @@ export default {
         title: 'Product Pages',
         previewUrl: ''
       },
-      editSectionStatus: ''
+      editSectionStatus: '',
+      addPageVisible: false
     }
   },
   created () {
@@ -237,6 +252,25 @@ export default {
       }
       const el = document.querySelector('.design-website-wrapper')
       el.className = 'design-website-wrapper ' + value
+    },
+    addPageFun (load) {
+      this.toggleAddPageVisible()
+      if (load) {
+        http.pages({
+          shopCode: this.shopCode,
+          templateCode: this.shopTemplateCode
+        }).then(result => {
+          this.resultMessage(result, (success) => {
+            if (success) {
+              this.unionPages = []
+              this.getPages(result.data)
+            }
+          })
+        })
+          .catch(error => {
+            console.log(error)
+          })
+      }
     },
     /**
      * 初始数据
@@ -350,12 +384,21 @@ export default {
       this.editSectionStatus = status ? 'edited' : ''
     },
     /**
+     * 自定义页弹窗
+     */
+    toggleAddPageVisible () {
+      this.addPageVisible = !this.addPageVisible
+    },
+    /**
      * 切换页面
      * @param pageCode
      */
     changePage (pageCode) {
-      if (pageCode === 'fo-add-custom-page') {
-        this.utility.openSite(`/en/shop/${this.shopCode}/store/pages/add/`)
+      if (pageCode === 'fo-manage-custom-page') {
+        this.utility.openSite(`/en/shop/${this.shopCode}/store/pages`)
+      } else if (pageCode === 'fo-add-custom-page') {
+        this.toggleAddPageVisible()
+        // this.utility.openSite(`/en/shop/${this.shopCode}/store/pages/add/`)
       } else {
         const pages = this.unionPages.filter((o) => {
           return o.pageCode === pageCode
@@ -390,6 +433,8 @@ export default {
                 message: this.$t('design.saveSuccess'),
                 type: 'success'
               })
+              this.getPageData(this.dataset.page.pageCode)
+              this.pageURL = this.pageData.previewUrl + '?' + new Date().getTime()
             }
           })
         })

@@ -22,7 +22,7 @@
           v-model="model[schema.field]"
           :active-value="true"
           :inactive-value="false"
-          active-color="#13ce66"
+          active-color="#1890FF"
         >
         </el-switch>
         {{ schema.name[language] }}

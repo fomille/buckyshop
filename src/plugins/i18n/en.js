@@ -31,20 +31,13 @@ export default {
     home: 'Home',
     confirm: 'OK',
     cancel: 'Cancel',
-    discard: '取消',
     save: 'Save',
     leave: 'Leave',
-    reset: '重置',
-    actionLabel: '操作',
     actionCopy: 'Copy',
     rename: 'Rename',
     preview: 'Preview',
     publish: 'Publish',
     duplicate: 'Duplicate',
-    actionSearch: '请输入关键字',
-    language: '语言',
-    register: '注册',
-    login: '登录',
     more: 'More',
     back: 'Back',
     edit: 'Edit',
@@ -494,7 +487,7 @@ export default {
           state: 'State'
         },
         state: {
-          new: 'Pending',
+          new: 'New',
           processing: 'Processing',
           processed: 'Processed',
           voided: 'Voided',
@@ -604,6 +597,7 @@ export default {
   design: {
     pageTitle: 'Design website',
     addPage: 'Add custom page',
+    managePage: 'Custom page management',
     editMenu: '编辑菜单',
     selected: '选择',
     clonePage: {
@@ -703,8 +697,22 @@ export default {
       }
     },
     saveSuccess: 'Saved successfully',
-    section: '模块',
-    settings: '主题',
-    addSection: 'Select Section'
+    addSection: 'Select Section',
+    removeSection: 'Are you sure to delete the section? ',
+    pageEntity: {
+      title: {
+        label: 'Page title',
+        placeholder: 'Please enter page title',
+        required: 'Please enter page title',
+        custom: ''
+      },
+      content: {
+        label: 'Content',
+        placeholder: 'Please enter content',
+        required: 'Please enter content',
+        custom: '',
+        exists: ''
+      }
+    }
   }
 }

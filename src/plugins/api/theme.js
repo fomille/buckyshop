@@ -73,3 +73,8 @@ export const builderUpdate = params => http.post('/buckyshop/template/shop-page/
  * URL搜索
  */
 export const urlSearch = params => http.post('/buckyshop/template/url/search', params)
+
+/**
+ * 添加自定义页
+ */
+export const createPage = params => http.post('/buckyshop/template/custom-page/create-data', params)

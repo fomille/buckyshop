@@ -239,7 +239,7 @@ hr {
     height: 100%;
     border: 0; }
   .embed-responsive img {
-    object-fit: cover;
+    object-fit: scale-down;
     object-position: center;
     transition: all 0.25s; }
 
@@ -1382,6 +1382,8 @@ header {
   .page-list .el-dropdown-menu__item {
     min-width: 160px;
     color: rgba(0, 0, 0, 0.8); }
+  .page-list .popper__arrow {
+    display: none !important; }
 
 /**
 添加组件
@@ -1477,12 +1479,14 @@ header {
     left: 0;
     bottom: 0;
     height: calc(100% - 57px);
-    width: 210px;
+    width: 240px;
     overflow-x: hidden;
     overflow-y: auto; }
     .design-settings .editor-section-content.active {
       bottom: 51px;
       height: calc(100% - 108px); }
+    .design-settings .editor-section-content .settings-content-block {
+      background-color: #f9f9f9; }
 
 /*
 参数节点
@@ -1508,23 +1512,27 @@ header {
     font-size: 8px !important;
     margin-right: 20px;
     width: 10px;
-    float: right; }
+    float: right;
+    transform: rotate(-90deg);
+    transition: all 0.3s; }
   .setting-element:not(.only-one).active:before {
-    content: '\e63c'; }
+    transform: rotate(0deg); }
 
 /**
 元素
  */
 .setting-widget {
-  margin-top: 10px;
   padding-left: 15px;
   padding-right: 15px; }
+  .setting-widget:not(:first-child) {
+    margin-top: 10px; }
   .setting-widget p {
     margin: 5px 0;
     color: #999;
     font-size: 12px; }
   .setting-widget h6 {
-    margin: 5px 0;
+    padding: 5px 0;
+    margin: 0;
     color: #999;
     font-size: 12px; }
   .setting-widget .el-select {

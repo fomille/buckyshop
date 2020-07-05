@@ -465,6 +465,9 @@ $colorHeading: #24292e;
     min-width: 160px;
     color: rgba(0, 0, 0, .8);
   }
+  .popper__arrow {
+    display: none!important;
+  }
 }
 
 /**
@@ -583,7 +586,7 @@ $colorHeading: #24292e;
     left: 0;
     bottom: 0;
     height: calc(100% - 57px);
-    width: 210px;
+    width: 240px;
     //padding-left: 15px;
     //padding-right: 15px;
     overflow-x: hidden;
@@ -592,6 +595,9 @@ $colorHeading: #24292e;
     &.active {
       bottom: 51px;
       height: calc(100% - 108px);
+    }
+    .settings-content-block {
+      background-color: #f9f9f9;
     }
   }
 }
@@ -624,10 +630,12 @@ $colorHeading: #24292e;
       margin-right: 20px;
       width: 10px;
       float: right;
+      transform: rotate(-90deg);
+      transition: $transition;
     }
     &.active {
       &:before {
-        content: '\e63c';
+        transform: rotate(0deg);
       }
     }
   }
@@ -637,9 +645,12 @@ $colorHeading: #24292e;
 元素
  */
 .setting-widget {
-  margin-top: 10px;
   padding-left: 15px;
   padding-right: 15px;
+
+  &:not(:first-child) {
+    margin-top: 10px;
+  }
 
   p {
     margin: 5px 0;
@@ -648,7 +659,8 @@ $colorHeading: #24292e;
   }
 
   h6 {
-    margin: 5px 0;
+    padding: 5px 0;
+    margin: 0;
     color: $color-gray;
     font-size: 12px;
   }
@@ -1060,7 +1072,7 @@ $colorHeading: #24292e;
     .editor-content-element-move {
       text-indent: 0;
       text-align: center;
-      cursor: move!important;
+      cursor: move !important;
 
       &:hover {
         i {
@@ -1129,16 +1141,11 @@ $colorHeading: #24292e;
   循环列组件
    */
   .editor-content-element {
-    //padding-left: 8px;
     .editor-sub-title {
       color: #ababab;
       font-weight: bold;
       padding: 0 15px;
     }
-    //
-    //&:not(.active) {
-    //  display: none;
-    //}
   }
 }
 
