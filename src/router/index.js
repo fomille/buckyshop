@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import layout from '../components/layout/content.vue'
 import i18n from '../plugins/i18n/base'
 
 Vue.use(VueRouter)
@@ -8,7 +7,6 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/:shopCode',
-    component: layout,
     meta: {
       title: i18n.t('passport.login.title'),
       requireAuth: false,
